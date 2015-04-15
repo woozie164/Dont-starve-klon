@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "lua.hpp"
+#include "glfw3.h"
 
 struct Entity 
 {
@@ -20,9 +21,41 @@ int test(lua_State * L)
 	std::cout << s << std::endl;
 	return 0;
 }
+using namespace std;
 
 int main( int argc, char ** argv )
 {
+	cout << "Hello world" << endl;
+	GLFWwindow* window;
+
+	/* Initialize the library */
+	if (!glfwInit())
+		return -1;
+
+	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		return -1;
+	}
+
+	glfwMakeContextCurrent(window);
+
+	/* Loop until the user closes the window */
+	while (!glfwWindowShouldClose(window))
+	{
+		/* Render here */
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
+
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
+	return 0;
+
 	lua_State * L = luaL_newstate();
 	luaL_openlibs(L); //Öppna alla standardlib i lua
 

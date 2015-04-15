@@ -20,19 +20,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\lauxlib.h">
+    <ClInclude Include="glfw3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\lua.h">
+    <ClInclude Include="glfw3native.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\lua.hpp">
+    <ClInclude Include="lualib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\luaconf.h">
+    <ClInclude Include="luaconf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\lualib.h">
+    <ClInclude Include="lua.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lua.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
