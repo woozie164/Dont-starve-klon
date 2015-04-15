@@ -1,0 +1,1 @@
+testCfunc("Hello function")

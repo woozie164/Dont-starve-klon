@@ -1,0 +1,5 @@
+--print( tostring(Entity1) )
+print( Entity1.name )
+print( Entity1[1] )
+print( Entity1[2] )
+print( Entity1[3] )
