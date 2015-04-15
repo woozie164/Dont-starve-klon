@@ -18,9 +18,8 @@ public:
 
 	Terrain(float width, float depth);
 	void LoadTerrain(float width, float depth);
-	const VertexData * GetData() { return vertices.data(); };
+	const VertexData * GetVertexData() { return vertices.data(); };
 	const unsigned int * GetIndices() { return indices.data(); };
 	int GetVertexCount() { return vertices.size(); };
 	int GetIndicesCount() { return indices.size(); };
-	float GetMeshYPosition(glm::vec3 rayOrigin);
 };
