@@ -45,7 +45,11 @@ int main( int argc, char ** argv )
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
-
+		glBegin(GL_TRIANGLES);
+		glVertex2d(0, 0);
+		glVertex2d(0, 1);
+		glVertex2d(1, 0);
+		glEnd();
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
