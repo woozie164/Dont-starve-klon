@@ -42,9 +42,11 @@ void InitTriangle()
 
 void DrawTriangle()
 {
+	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOHandle[0]);
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDisableVertexAttribArray(0);
 }
 
 void glfw_error_callback(int error, const char* description)
@@ -209,7 +211,6 @@ int main( int argc, char ** argv )
 		std::cerr << "Unable to run:" << lua_tostring(L, 1);
 		lua_pop(L,1);
 	}
-
 	lua_pushstring(L, "NEJ" );
 	lua_setglobal(L, "min_variabel");
 	error = luaL_loadfile(L, "J:/Visual Studio 2012/Projects/Lua test/Lua test/lua/script.lua") || lua_pcall(L, 0, 1, 0);
@@ -224,15 +225,12 @@ int main( int argc, char ** argv )
 		std::cout << lua_tostring( L, -1 ) << std::endl;
 		lua_pop(L, 1);
 	}
-
 	lua_getglobal(L, "min_variabel");
 	std::cout << lua_tostring(L, -1);
 	std::cout << std::endl;
 	lua_pop(L, 1);
-
 	lua_getglobal( L, "errhandler" );
 	int errhandler_pos = lua_gettop(L);
-
 	lua_getglobal(L, "sqr");
 	lua_pushinteger(L, 100);
 	error = lua_pcall(L, 1, 1, errhandler_pos);
@@ -241,12 +239,10 @@ int main( int argc, char ** argv )
 		std::cerr << "Unable to run:" << lua_tostring(L, -1);
 		lua_pop(L, 1);
 	}
-
 	if(!error) {
 		std::cout << lua_tonumber(L, -1) << std::endl;
 		lua_pop(L, 1);
 	}
-
 	error = luaL_loadfile(L, "J:/Visual Studio 2012/Projects/Lua test/Lua test/lua/fib.lua") || lua_pcall(L, 0, 0, 0);
 		
 	if(error)
@@ -254,7 +250,6 @@ int main( int argc, char ** argv )
 		std::cerr << "Unable to run:" << lua_tostring(L, -1);
 		lua_pop(L, 1);
 	}
-
 	error = luaL_loadfile(L, "J:/Visual Studio 2012/Projects/Lua test/Lua test/lua/table.lua") || lua_pcall(L, 0, 0, 0);
 		
 	if(error)
@@ -262,7 +257,6 @@ int main( int argc, char ** argv )
 		std::cerr << "Unable to run:" << lua_tostring(L, -1);
 		lua_pop(L, 1);
 	}
-
 	// table is in the stack at index 't'
 	lua_getglobal(L, "test");
     lua_pushnil(L);  // first key 

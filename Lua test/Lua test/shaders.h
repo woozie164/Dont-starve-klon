@@ -13,8 +13,6 @@ struct ShaderInfo
 	GLuint shaderHandle;
 };
 
-
-
 class ShaderProgramManager
 {
 private:
