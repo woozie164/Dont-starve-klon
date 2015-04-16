@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "lua.hpp"
+#include "GL\glew.h"
 #include "glfw3.h"
 
 struct Entity 
@@ -23,6 +24,78 @@ int test(lua_State * L)
 }
 using namespace std;
 
+const GLfloat triangle[] = { 
+	-1.0f, -1.0f, 0.0f,
+	-1.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 0.0f
+};
+
+GLuint VBOHandle[1];
+GLuint VAOHandle[1];
+
+void InitTriangle()
+{
+	glGenBuffers(1, VBOHandle);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOHandle[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+}
+
+void DrawTriangle()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, VBOHandle[0]);
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void glfw_error_callback(int error, const char* description)
+{
+	fputs(description, stderr);
+}
+
+void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	cout << "---------------------opengl-callback-start------------" << endl;
+	cout << "message: " << message << endl;
+	cout << "type: ";
+	switch (type) {
+	case GL_DEBUG_TYPE_ERROR:
+		cout << "ERROR";
+		break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+		cout << "DEPRECATED_BEHAVIOR";
+		break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+		cout << "UNDEFINED_BEHAVIOR";
+		break;
+	case GL_DEBUG_TYPE_PORTABILITY:
+		cout << "PORTABILITY";
+		break;
+	case GL_DEBUG_TYPE_PERFORMANCE:
+		cout << "PERFORMANCE";
+		break;
+	case GL_DEBUG_TYPE_OTHER:
+		cout << "OTHER";
+		break;
+	}
+	cout << endl;
+
+	cout << "id: " << id << endl;
+	cout << "severity: ";
+	switch (severity){
+	case GL_DEBUG_SEVERITY_LOW:
+		cout << "LOW";
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		cout << "MEDIUM";
+		break;
+	case GL_DEBUG_SEVERITY_HIGH:
+		cout << "HIGH";
+		break;
+	}
+	cout << endl;
+	cout << "---------------------opengl-callback-end--------------" << endl;
+}
+
 int main( int argc, char ** argv )
 {
 	cout << "Hello world" << endl;
@@ -31,8 +104,14 @@ int main( int argc, char ** argv )
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
+	
+	glfwSetErrorCallback(glfw_error_callback);
 
+	//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+	//window = glfwCreateWindow(1920, 1080, "Borderless fullscreen ftw", NULL, NULL);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	
 	if (!window)
 	{
 		glfwTerminate();
@@ -41,6 +120,25 @@ int main( int argc, char ** argv )
 
 	glfwMakeContextCurrent(window);
 
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+	}
+
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	if (glDebugMessageCallback)
+	{
+		glDebugMessageCallback(&openglCallbackFunction, nullptr);
+	}
+	else
+	{
+		cout << "glDebugMessageCallback not available" << endl;
+	}
+	
+	InitTriangle();
+	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -50,6 +148,9 @@ int main( int argc, char ** argv )
 		glVertex2d(0, 1);
 		glVertex2d(1, 0);
 		glEnd();
+	
+		DrawTriangle();
+		//glClear(GL_COLOR_BUFFER_BIT);
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
