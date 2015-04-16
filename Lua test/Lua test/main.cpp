@@ -27,7 +27,7 @@ int main( int argc, char ** argv )
 {
 	cout << "Hello world" << endl;
 	GLFWwindow* window;
-
+	
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
