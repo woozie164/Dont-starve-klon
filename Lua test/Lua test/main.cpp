@@ -157,6 +157,7 @@ int main( int argc, char ** argv )
 
 	glm::mat4 projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 150.0f);
 	glm::vec3 position(0.0f, 0.0f, 0.0f);
+	glm::vec3 direction(1.0f, 0.0f, 0.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	glm::mat4 viewMat = glm::lookAt(position, position + direction, up);
 
@@ -171,6 +172,12 @@ int main( int argc, char ** argv )
 		glVertex2d(0, 0);
 		glVertex2d(0, 1);
 		glVertex2d(1, 0);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glVertex3d(1, 0, -0.5);
+		glVertex3d(1, 1, 0);
+		glVertex3d(1, 0, 0);
 		glEnd();
 	
 		DrawTriangle();
