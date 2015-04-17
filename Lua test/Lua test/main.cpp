@@ -4,6 +4,9 @@
 #include "GL\glew.h"
 #include "glfw3.h"
 #include "shaders.h"
+#include "glm\glm.hpp"
+#include "glm\common.hpp"
+#include "glm\ext.hpp"
 
 struct Entity 
 {
@@ -146,7 +149,19 @@ int main( int argc, char ** argv )
 	ShaderProgramManager spm;
 	spm.LoadShaderFromFile("3dplane.vert", GL_VERTEX_SHADER);
 	spm.LoadShaderFromFile("3dplane.frag", GL_FRAGMENT_SHADER);
-	GLuint programHandle = spm.CompileShaderProgram("3dplane");	
+	GLuint planeProg = spm.CompileShaderProgram("3dplane");
+
+	glUseProgram(planeProg);
+	GLuint u_projection = glGetUniformLocation(planeProg, "projection");
+	GLuint u_view = glGetUniformLocation(planeProg, "view");
+
+	glm::mat4 projectionMatrix = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 150.0f);
+	glm::vec3 position(0.0f, 0.0f, 0.0f);
+	glm::vec3 up(0.0f, 1.0f, 0.0f);
+	glm::mat4 viewMat = glm::lookAt(position, position + direction, up);
+
+	glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniformMatrix4fv(u_view, 1, GL_FALSE, glm::value_ptr(viewMat));
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
