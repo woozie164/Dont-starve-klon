@@ -7,6 +7,7 @@
 #include "glm\glm.hpp"
 #include "glm\common.hpp"
 #include "glm\ext.hpp"
+#include "Camera.h"
 
 struct Entity 
 {
@@ -102,10 +103,12 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 	cout << "---------------------opengl-callback-end--------------" << endl;
 }
 
+GLFWwindow* window;
+
 int main( int argc, char ** argv )
 {
 	cout << "Hello world" << endl;
-	GLFWwindow* window;
+
 	
 	/* Initialize the library */
 	if (!glfwInit())
@@ -161,32 +164,41 @@ int main( int argc, char ** argv )
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	glm::mat4 viewMat = glm::lookAt(position, position + direction, up);
 
-	glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniformMatrix4fv(u_view, 1, GL_FALSE, glm::value_ptr(viewMat));
+	Camera camera;
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
-	{
-		/* Render here */
+	{		
+		static double lastTime = glfwGetTime();
+		double currentTime = glfwGetTime();
+		float deltaTime = float(currentTime - lastTime);
+
+		camera.Update(deltaTime);
+		glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(camera.projMat));
+		glUniformMatrix4fv(u_view, 1, GL_FALSE, glm::value_ptr(camera.viewMat));
+
+		/* Render here */		
 		glBegin(GL_TRIANGLES);
 		glVertex2d(0, 0);
 		glVertex2d(0, 1);
 		glVertex2d(1, 0);
 		glEnd();
-
+		
 		glBegin(GL_TRIANGLES);
 		glVertex3d(1, 0, -0.5);
 		glVertex3d(1, 1, 0);
 		glVertex3d(1, 0, 0);
 		glEnd();
-	
+		
 		DrawTriangle();
-		//glClear(GL_COLOR_BUFFER_BIT);
+
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
-
+		glClear(GL_COLOR_BUFFER_BIT);
 		/* Poll for and process events */
 		glfwPollEvents();
+
+		lastTime = currentTime;
 	}
 
 	glfwTerminate();
