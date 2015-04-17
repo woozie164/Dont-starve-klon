@@ -15,7 +15,6 @@ struct ShaderInfo
 
 class ShaderProgramManager
 {
-private:
 	std::unordered_map<std::string, GLuint> shaderPrograms;	
 	std::vector<ShaderInfo> shaders;
 

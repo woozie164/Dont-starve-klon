@@ -3,6 +3,7 @@
 #include "lua.hpp"
 #include "GL\glew.h"
 #include "glfw3.h"
+#include "shaders.h"
 
 struct Entity 
 {
@@ -121,7 +122,7 @@ int main( int argc, char ** argv )
 	}
 
 	glfwMakeContextCurrent(window);
-
+	
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
@@ -141,6 +142,12 @@ int main( int argc, char ** argv )
 	
 	InitTriangle();
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
+
+	ShaderProgramManager spm;
+	spm.LoadShaderFromFile("3dplane.vert", GL_VERTEX_SHADER);
+	spm.LoadShaderFromFile("3dplane.frag", GL_FRAGMENT_SHADER);
+	GLuint programHandle = spm.CompileShaderProgram("3dplane");	
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{

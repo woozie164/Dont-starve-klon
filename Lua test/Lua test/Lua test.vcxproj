@@ -95,6 +95,10 @@
     <ClInclude Include="terrain.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="3dplane.frag" />
+    <None Include="3dplane.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
