@@ -183,7 +183,7 @@ int main( int argc, char ** argv )
 	glGenVertexArrays(1, &terrainVAO);
 	glBindVertexArray(terrainVAO);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, terrain.GetVertexSize(), 0);
 	glDisableVertexAttribArray(0);
 
 	/* Loop until the user closes the window */
@@ -216,6 +216,14 @@ int main( int argc, char ** argv )
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainElementVBO);
 		glBindVertexArray(terrainVAO);
 		glDrawElements(GL_TRIANGLES, terrain.GetIndicesCount(), GL_UNSIGNED_INT, 0); 
+
+		glValidateProgram(planeProg);
+		GLint result;
+		glGetProgramiv(planeProg, GL_VALIDATE_STATUS, &result);
+		if (result == GL_FALSE)
+		{
+			cout << "ERROR WHEN VALIDATING PROGRAM" << endl;
+		}
 
 		GLenum e;
 		while ((e = glGetError()) != GL_NO_ERROR)
