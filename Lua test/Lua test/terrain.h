@@ -19,7 +19,9 @@ public:
 	Terrain(float width, float depth);
 	void LoadTerrain(float width, float depth);
 	const VertexData * GetVertexData() { return vertices.data(); };
-	const unsigned int * GetIndices() { return indices.data(); };
+	const unsigned int * GetIndicesData() { return indices.data(); };
 	int GetVertexCount() { return vertices.size(); };
 	int GetIndicesCount() { return indices.size(); };
+	int GetVertexSize() { return sizeof(VertexData);  };
+	int GetIndicesSize() { return sizeof(unsigned int); };
 };

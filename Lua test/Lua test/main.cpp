@@ -8,6 +8,7 @@
 #include "glm\common.hpp"
 #include "glm\ext.hpp"
 #include "Camera.h"
+#include "terrain.h"
 
 struct Entity 
 {
@@ -165,6 +166,25 @@ int main( int argc, char ** argv )
 	glm::mat4 viewMat = glm::lookAt(position, position + direction, up);
 
 	Camera camera;
+	Terrain terrain;
+	terrain.LoadTerrain(127.0f, 127.0f);
+	GLuint terrainVBO;
+	GLuint terrainVAO;
+
+	glGenBuffers(1, &terrainVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+	glBufferData(GL_ARRAY_BUFFER, terrain.GetVertexSize() * terrain.GetVertexCount(), terrain.GetVertexData(), GL_STATIC_DRAW);
+
+	GLuint terrainElementVBO;
+	glGenBuffers(1, &terrainElementVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainElementVBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrain.GetIndicesCount() * terrain.GetIndicesSize(), terrain.GetIndicesData(), GL_STATIC_DRAW);
+
+	glGenVertexArrays(1, &terrainVAO);
+	glBindVertexArray(terrainVAO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	glDisableVertexAttribArray(0);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -191,6 +211,17 @@ int main( int argc, char ** argv )
 		glEnd();
 		
 		DrawTriangle();
+
+		glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainElementVBO);
+		glBindVertexArray(terrainVAO);
+		glDrawElements(GL_TRIANGLES, terrain.GetIndicesCount(), GL_UNSIGNED_INT, 0); 
+
+		GLenum e;
+		while ((e = glGetError()) != GL_NO_ERROR)
+		{
+			cout << e;
+		}
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
