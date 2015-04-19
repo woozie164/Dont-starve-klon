@@ -1,5 +1,6 @@
 #include "terrain.h"
 
+
 using namespace std;
 using namespace glm;
 
@@ -48,6 +49,37 @@ void Terrain::LoadTerrain(float width, float depth)
 			indices.push_back(j + numOfColVert + 1 + rowOffset);
 		}
 	}
+
+	InitBuffers();
+}
+
+void Terrain::InitBuffers()
+{
+	glGenBuffers(1, &terrainVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+	glBufferData(GL_ARRAY_BUFFER, GetVertexSize() * GetVertexCount(), GetVertexData(), GL_STATIC_DRAW);
+
+	glGenVertexArrays(1, &terrainVAO);
+	glBindVertexArray(terrainVAO);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GetVertexSize(), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GetVertexSize(), (GLvoid *)(3 * sizeof(float)));
+
+	// Element buffers are a part of VAO state
+	// so this should come between glBindVertexArray(terrainVAO) and glBindVertexArray(0)	
+	glGenBuffers(1, &terrainElementVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainElementVBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetIndicesCount() * GetIndicesSize(), GetIndicesData(), GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+}
+
+void Terrain::Draw()
+{
+	glBindVertexArray(terrainVAO);
+	glDrawElements(GL_TRIANGLES, GetIndicesCount(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 /*
 #define NEAR_ZERO powf(10, -20)

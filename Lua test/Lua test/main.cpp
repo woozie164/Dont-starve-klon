@@ -168,30 +168,8 @@ int main( int argc, char ** argv )
 	Camera camera;
 	Terrain terrain;
 	terrain.LoadTerrain(127.0f, 127.0f);
-	GLuint terrainVBO;
-	GLuint terrainVAO;
+	
 
-	glGenBuffers(1, &terrainVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
-	glBufferData(GL_ARRAY_BUFFER, terrain.GetVertexSize() * terrain.GetVertexCount(), terrain.GetVertexData(), GL_STATIC_DRAW);
-
-	glGenVertexArrays(1, &terrainVAO);
-	glBindVertexArray(terrainVAO);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, terrain.GetVertexSize(), 0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, terrain.GetVertexSize(), (GLvoid *)(3 * sizeof(float)));
-
-	// Element buffers are a part of VAO state
-	// so this should come between glBindVertexArray(terrainVAO) and glBindVertexArray(0)
-	GLuint terrainElementVBO;
-	glGenBuffers(1, &terrainElementVBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainElementVBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, terrain.GetIndicesCount() * terrain.GetIndicesSize(), terrain.GetIndicesData(), GL_STATIC_DRAW);	
-
-	glBindVertexArray(0);
-//	glDisableVertexAttribArray(0);
-	//glDisableVertexAttribArray(1);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -218,10 +196,8 @@ int main( int argc, char ** argv )
 		glEnd();
 		
 		DrawTriangle();
-		
-		glBindVertexArray(terrainVAO);
-		glDrawElements(GL_TRIANGLES, terrain.GetIndicesCount(), GL_UNSIGNED_INT, 0); 		
-		glBindVertexArray(0);
+
+		terrain.Draw();
 
 		glValidateProgram(planeProg);
 		GLint result;
