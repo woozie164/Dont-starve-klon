@@ -9,6 +9,7 @@
 #include "glm\ext.hpp"
 #include "Camera.h"
 #include "terrain.h"
+#include "src\SOIL.h"
 
 struct Entity 
 {
@@ -168,8 +169,20 @@ int main( int argc, char ** argv )
 	Camera camera;
 	Terrain terrain;
 	terrain.LoadTerrain(127.0f, 127.0f);
-	
 
+	
+	GLuint result = SOIL_load_OGL_texture
+		(
+		"tiles.png",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+		);
+
+	if (result == 0)
+	{
+		printf("SOIL loading error: '%s'\n", SOIL_last_result());
+	}
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
