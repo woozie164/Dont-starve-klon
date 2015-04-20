@@ -1,5 +1,5 @@
 #version 440
-uniform sampler2D tex;
+layout (binding = 0) uniform sampler2D tex;
 
 in vec4 position;
 in vec2 vs_tex_coord;

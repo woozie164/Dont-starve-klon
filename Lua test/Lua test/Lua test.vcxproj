@@ -84,6 +84,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shaders.cpp" />
     <ClCompile Include="terrain.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -95,6 +96,7 @@
     <ClInclude Include="lualib.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="terrain.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>

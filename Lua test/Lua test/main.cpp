@@ -10,6 +10,9 @@
 #include "Camera.h"
 #include "terrain.h"
 #include "src\SOIL.h"
+#include "Tile.h"
+
+ShaderProgramManager spm;
 
 struct Entity 
 {
@@ -63,6 +66,14 @@ void glfw_error_callback(int error, const char* description)
 
 void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
+	// Ignore certain messages
+	switch (id)
+	{
+	// A verbose message about what type of memory was allocated for a buffer.
+	case 131185: 
+		return;
+	}
+
 	cout << "---------------------opengl-callback-start------------" << endl;
 	cout << "message: " << message << endl;
 	cout << "type: ";
@@ -151,7 +162,6 @@ int main( int argc, char ** argv )
 	InitTriangle();
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 
-	ShaderProgramManager spm;
 	spm.LoadShaderFromFile("3dplane.vert", GL_VERTEX_SHADER);
 	spm.LoadShaderFromFile("3dplane.frag", GL_FRAGMENT_SHADER);
 	GLuint planeProg = spm.CompileShaderProgram("3dplane");
@@ -190,10 +200,16 @@ int main( int argc, char ** argv )
 		printf("SOIL loading error: '%s'\n", SOIL_last_result());
 	}
 
+	Tile tile(4.0, 4.0f, 0.0f, 3.0f, 0.0f);
+	tile.LoadTexture("tiles.png");
+	
+	glEnable(GL_DEPTH_TEST);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		static double lastTime = glfwGetTime();
 		double currentTime = glfwGetTime();
 		float deltaTime = float(currentTime - lastTime);
@@ -219,9 +235,13 @@ int main( int argc, char ** argv )
 		DrawTriangle();
 	
 		glUseProgram(planeTexProg);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, result);
 		glUniformMatrix4fv(u_projection2, 1, GL_FALSE, glm::value_ptr(camera.projMat));
 		glUniformMatrix4fv(u_view2, 1, GL_FALSE, glm::value_ptr(camera.viewMat));
 		terrain.Draw();
+
+		tile.Draw();
 
 		glValidateProgram(planeProg);
 		GLint result;
@@ -239,7 +259,7 @@ int main( int argc, char ** argv )
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
-		glClear(GL_COLOR_BUFFER_BIT);
+
 		/* Poll for and process events */
 		glfwPollEvents();
 
