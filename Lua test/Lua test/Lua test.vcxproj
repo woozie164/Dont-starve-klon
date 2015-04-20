@@ -100,6 +100,8 @@
   <ItemGroup>
     <None Include="3dplane.frag" />
     <None Include="3dplane.vert" />
+    <None Include="3dplanetex.frag" />
+    <None Include="3dplanetex.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

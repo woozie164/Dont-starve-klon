@@ -170,7 +170,13 @@ int main( int argc, char ** argv )
 	Terrain terrain;
 	terrain.LoadTerrain(127.0f, 127.0f);
 
-	
+	spm.LoadShaderFromFile("3dplanetex.vert", GL_VERTEX_SHADER);
+	spm.LoadShaderFromFile("3dplanetex.frag", GL_FRAGMENT_SHADER);
+	GLuint planeTexProg = spm.CompileShaderProgram("3dplanetex");	
+	GLuint u_projection2 = glGetUniformLocation(planeTexProg, "projection");
+	GLuint u_sampler2D = glGetUniformLocation(planeTexProg, "tex");
+	GLuint u_view2 = glGetUniformLocation(planeTexProg, "view");
+
 	GLuint result = SOIL_load_OGL_texture
 		(
 		"tiles.png",
@@ -184,6 +190,7 @@ int main( int argc, char ** argv )
 		printf("SOIL loading error: '%s'\n", SOIL_last_result());
 	}
 
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{		
@@ -191,6 +198,7 @@ int main( int argc, char ** argv )
 		double currentTime = glfwGetTime();
 		float deltaTime = float(currentTime - lastTime);
 
+		glUseProgram(planeProg);
 		camera.Update(deltaTime);
 		glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(camera.projMat));
 		glUniformMatrix4fv(u_view, 1, GL_FALSE, glm::value_ptr(camera.viewMat));
@@ -209,7 +217,10 @@ int main( int argc, char ** argv )
 		glEnd();
 		
 		DrawTriangle();
-
+	
+		glUseProgram(planeTexProg);
+		glUniformMatrix4fv(u_projection2, 1, GL_FALSE, glm::value_ptr(camera.projMat));
+		glUniformMatrix4fv(u_view2, 1, GL_FALSE, glm::value_ptr(camera.viewMat));
 		terrain.Draw();
 
 		glValidateProgram(planeProg);

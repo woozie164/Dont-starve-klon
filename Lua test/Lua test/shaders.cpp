@@ -52,6 +52,7 @@ GLuint ShaderProgramManager::CompileShaderProgram(std::string programName)
 				glGetShaderInfoLog(shaderHandle, logLen, &written, log);
 				fprintf(stderr, "Shader log:\n%s", log);
 				free(log);
+				shaders.clear();
 				return -1;
 			}
 		}
@@ -74,12 +75,14 @@ GLuint ShaderProgramManager::CompileShaderProgram(std::string programName)
 			glGetProgramInfoLog(programHandle, logLen, &written, log);
 			fprintf(stderr, "Program log: \n%s", log);
 			free(log);
+			shaders.clear();
 			return -2;
 		}
 	}
 	else
 	{		
 		shaderPrograms.insert(pair<string, GLuint>(programName, programHandle));
+		shaders.clear();
 		return programHandle;
 	}
 }

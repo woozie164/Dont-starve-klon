@@ -67,5 +67,11 @@
     <None Include="3dplane.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="3dplanetex.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="3dplanetex.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
