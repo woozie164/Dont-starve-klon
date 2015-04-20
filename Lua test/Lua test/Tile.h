@@ -32,5 +32,7 @@ public:
 
 	void LoadTexture(const char * filename);
 	void Draw();
+
+	void Tile::SetTileType(TileType type);
 };
 

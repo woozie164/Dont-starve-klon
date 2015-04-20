@@ -6,7 +6,7 @@ extern ShaderProgramManager spm;
 
 Tile::Tile()
 {
-
+	type = Dirt;
 }
 
 
@@ -15,7 +15,7 @@ Tile::~Tile()
 }
 
 
-Tile::Tile(float width, float depth, float x, float y, float z)
+Tile::Tile(float width, float depth, float x, float y, float z) : Tile()
 {
 	VertexData vert;
 	vert.point = glm::vec3(x, y, z);
@@ -41,11 +41,16 @@ Tile::Tile(float width, float depth, float x, float y, float z)
 	indices.push_back(0);
 	indices.push_back(2);
 	indices.push_back(3);
+
+	SetTileType(type);
 }
 
 
 void Tile::LoadTexture(const char * filename)
 {
+	/*
+	Something wrong here. Can't get the texture to display using this way.
+
 	glGenTextures(1, &texture);
 
 	int width, height;
@@ -53,6 +58,8 @@ void Tile::LoadTexture(const char * filename)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
+
+	
 	image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGB);
 	if (image == 0)
 	{
@@ -60,7 +67,23 @@ void Tile::LoadTexture(const char * filename)
 	}
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
 		GL_UNSIGNED_BYTE, image);
+	
 	SOIL_free_image_data(image);
+	*/
+
+	texture = SOIL_load_OGL_texture
+		(
+			"tiles.png",
+			SOIL_LOAD_AUTO,
+			SOIL_CREATE_NEW_ID,
+			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+		);
+
+	if (texture == 0)
+	{
+		printf("SOIL loading error: '%s'\n", SOIL_last_result());
+	}
+
 
 	/* I can't get this part to work, for some reason
 	so i changed the shader to always use texture unit 0
@@ -106,4 +129,32 @@ void Tile::Draw()
 	glBindVertexArray(0);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+// Setting the tile type determines what part of the tiles.png image should be rendered
+void Tile::SetTileType(TileType type)
+{
+	switch (type)
+	{
+	case Rock:
+		vertices[0].texCoord = glm::vec2(0.0f, 0.0f);
+		vertices[1].texCoord = glm::vec2(1.0f / 3.0f, 0.0f);
+		vertices[2].texCoord = glm::vec2(1.0f / 3.0f, 1.0f);
+		vertices[3].texCoord = glm::vec2(0.0f, 1.0f);
+		break;
+	case Grass:
+		vertices[0].texCoord = glm::vec2(1.0f / 3.0f, 0.0f);
+		vertices[1].texCoord = glm::vec2(2.0f / 3.0f, 0.0f);
+		vertices[2].texCoord = glm::vec2(2.0f / 3.0f, 1.0f);
+		vertices[3].texCoord = glm::vec2(1.0f / 3.0f, 1.0f);
+		break;
+	case Dirt:
+		vertices[0].texCoord = glm::vec2(2.0f / 3.0f, 0.0f);
+		vertices[1].texCoord = glm::vec2(1.0f, 0.0f);
+		vertices[2].texCoord = glm::vec2(1.0f, 1.0f);
+		vertices[3].texCoord = glm::vec2(2.0f / 3.0f, 1.0f);
+		break;
+	default:
+		break;
+	}
 }
