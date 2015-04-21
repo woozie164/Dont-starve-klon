@@ -11,6 +11,7 @@
 #include "terrain.h"
 #include "src\SOIL.h"
 #include "Tile.h"
+#include "GameObject.h"
 
 ShaderProgramManager spm;
 
@@ -235,6 +236,7 @@ int main( int argc, char ** argv )
 		}		
 	}
 	
+	GameObject mainCharacter;
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -287,6 +289,8 @@ int main( int argc, char ** argv )
 		{
 			tiles[i].Draw();
 		}
+
+		mainCharacter.Draw();
 
 		glValidateProgram(planeProg);
 		GLint result;

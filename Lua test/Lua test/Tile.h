@@ -17,13 +17,14 @@ class Tile
 {
 	GLuint VBO, VAO, elementVBO;
 	GLuint texture;
+	TileType type;
 
-	std::vector<VertexData> vertices;
 	std::vector<unsigned int> indices;
 
 	void InitBuffers();
 public:
-	TileType type;
+	std::vector<VertexData> vertices;
+
 
 	Tile();
 	~Tile();
