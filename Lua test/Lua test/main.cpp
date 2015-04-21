@@ -248,6 +248,13 @@ int main( int argc, char ** argv )
 		float deltaTime = float(currentTime - lastTime);
 
 		glUseProgram(planeProg);
+
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+			camera.cameraPosition = glm::vec3(14.1046686f, 5.20885277f, 0.567461133f);
+			camera.horizontalAngle = -728.854736f;
+			camera.verticalAngle = -120.005180f;
+		}
+
 		camera.Update(deltaTime);
 		glUniformMatrix4fv(u_projection, 1, GL_FALSE, glm::value_ptr(camera.projMat));
 		glUniformMatrix4fv(u_view, 1, GL_FALSE, glm::value_ptr(camera.viewMat));

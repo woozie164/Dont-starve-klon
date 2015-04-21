@@ -49,13 +49,27 @@ void Camera::Update(float dt)
 	glm::vec3 up = glm::cross(right, direction);
 	
 	// Move forward
+	/*
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
 		cameraPosition += direction * dt * cameraSpeed;
 	}
+
 	// Move backward
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
 		cameraPosition -= direction * dt * cameraSpeed;
 	}
+	*/
+
+	// Move forward along the z axis
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS){
+		cameraPosition += glm::vec3(0.0f, 0.0f, 1.0f) * dt * cameraSpeed;
+	}
+
+	// Move backward along the z axis
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS){
+		cameraPosition -= glm::vec3(0.0f, 0.0f, 1.0f) * dt * cameraSpeed;
+	}
+
 	// Strafe right
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
 		cameraPosition += right * dt * cameraSpeed;
