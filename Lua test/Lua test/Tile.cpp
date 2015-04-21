@@ -6,7 +6,7 @@ extern ShaderProgramManager spm;
 
 Tile::Tile()
 {
-	type = Dirt;
+	type = Grass;
 }
 
 
@@ -134,6 +134,7 @@ void Tile::Draw()
 // Setting the tile type determines what part of the tiles.png image should be rendered
 void Tile::SetTileType(TileType type)
 {
+	this->type = type;
 	switch (type)
 	{
 	case Rock:
@@ -157,4 +158,8 @@ void Tile::SetTileType(TileType type)
 	default:
 		break;
 	}
+
+	// Update the data that's already in the VRAM
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * 4, vertices.data(), GL_STATIC_DRAW);
 }

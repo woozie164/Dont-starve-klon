@@ -199,10 +199,43 @@ int main( int argc, char ** argv )
 	{
 		printf("SOIL loading error: '%s'\n", SOIL_last_result());
 	}
-
+	/*
 	Tile tile(4.0, 4.0f, 0.0f, 3.0f, 0.0f);
 	tile.LoadTexture("tiles.png");
+
+	Tile tile2(4.0f, 4.0f, 4.0f, 3.0f, 0.0f);
+	tile2.LoadTexture("tiles.png");
+	*/
+	// Create a plane that consists of several tiles
+	vector<Tile> tiles;
 	
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			float width = 4.0f;
+			float depth = 4.0f;
+			tiles.push_back(Tile(width, depth, i * width, 3.0f, j * depth));
+			tiles[j + i * 6].LoadTexture("tiles.png");
+
+			// Give each row a certain tile type
+			switch (i % 3)
+			{
+			case 0:
+				tiles[j + i * 6].SetTileType(Grass);
+				break;
+			case 1:
+				tiles[j + i * 6].SetTileType(Dirt);
+				break;
+			case 2:
+				tiles[j + i * 6].SetTileType(Rock);
+				break;
+			}
+			
+		}		
+	}
+	
+
 	glEnable(GL_DEPTH_TEST);
 
 	/* Loop until the user closes the window */
@@ -241,7 +274,12 @@ int main( int argc, char ** argv )
 		glUniformMatrix4fv(u_view2, 1, GL_FALSE, glm::value_ptr(camera.viewMat));
 		terrain.Draw();
 
-		tile.Draw();
+		//tile.Draw();
+		//tile2.Draw();
+		for ( int i  = 0; i < tiles.size(); i++ )
+		{
+			tiles[i].Draw();
+		}
 
 		glValidateProgram(planeProg);
 		GLint result;
