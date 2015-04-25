@@ -33,6 +33,7 @@ public:
 
 	void LoadTexture(const char * filename);
 	void Draw();
+	void UpdateVRAMData();
 
 	void Tile::SetTileType(TileType type);
 };

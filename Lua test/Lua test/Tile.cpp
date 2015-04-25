@@ -15,7 +15,7 @@ Tile::~Tile()
 }
 
 
-Tile::Tile(float width, float depth, float x, float y, float z) : Tile()
+Tile::Tile(float width, float depth, float x, float y, float z) //: Tile()
 {
 	VertexData vert;
 	vert.point = glm::vec3(x, y, z);
@@ -159,6 +159,11 @@ void Tile::SetTileType(TileType type)
 		break;
 	}
 
+	UpdateVRAMData();
+}
+
+void Tile::UpdateVRAMData()
+{
 	// Update the data that's already in the VRAM
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * 4, vertices.data(), GL_STATIC_DRAW);

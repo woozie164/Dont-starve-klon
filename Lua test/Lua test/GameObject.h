@@ -12,5 +12,7 @@ public:
 	void Draw();
 
 	int SetPosition(lua_State * L);
+	void SetPosition(float x, float y, float z);
+	void SetPosition(glm::vec3 position);
 };
 

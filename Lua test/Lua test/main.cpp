@@ -15,24 +15,15 @@
 
 ShaderProgramManager spm;
 
+ extern void InitLua();
+ extern lua_State * L;
+
 struct Entity 
 {
 	float position[3];
 	std::string name;
 };
 
-int test(lua_State * L)
-{
-	int n = lua_gettop(L);
-	if(n != 1)
-	{
-		std::cerr << "Expected 1 argument, " << n << " arguments found." << std::endl;
-		return 0;
-	}
-	std::string s = lua_tostring(L, -1);
-	std::cout << s << std::endl;
-	return 0;
-}
 using namespace std;
 
 const GLfloat triangle[] = { 
@@ -121,9 +112,6 @@ GLFWwindow* window;
 
 int main( int argc, char ** argv )
 {
-	cout << "Hello world" << endl;
-
-	
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -240,6 +228,8 @@ int main( int argc, char ** argv )
 
 	glEnable(GL_DEPTH_TEST);
 
+	InitLua();
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{		
@@ -255,6 +245,10 @@ int main( int argc, char ** argv )
 			camera.cameraPosition = glm::vec3(14.1046686f, 5.20885277f, 0.567461133f);
 			camera.horizontalAngle = -728.854736f;
 			camera.verticalAngle = -120.005180f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {			
+			mainCharacter.SetPosition(3.0f, 3.0f, 0.0f);
 		}
 
 		camera.Update(deltaTime);
@@ -318,9 +312,6 @@ int main( int argc, char ** argv )
 	glfwTerminate();
 	return 0;
 
-	lua_State * L = luaL_newstate();
-	luaL_openlibs(L); //Öppna alla standardlib i lua
-
 	// Creating a lua table from data in C++
 	Entity entity;
 	entity.name = "Bob";
@@ -347,17 +338,7 @@ int main( int argc, char ** argv )
 		std::cerr << "Unable to run:" << lua_tostring(L, 1);
 		lua_pop(L,1);
 	}
-
-	// Calling a C++ metod from Lua
-	lua_pushcfunction(L, test);
-	lua_setglobal(L, "testCfunc");
-
-	error = luaL_loadfile(L, "lua/functiontest.lua") || lua_pcall(L, 0, 0, 0);
-	if( error )
-	{
-		std::cerr << "Unable to run:" << lua_tostring(L, 1);
-		lua_pop(L,1);
-	}
+	
 
 	/*
 	int error = luaL_loadstring(L,"print('Hello World!')") || lua_pcall(L,0,0,0);

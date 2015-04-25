@@ -39,12 +39,22 @@ int GameObject::SetPosition(lua_State * L)
 	float x = lua_tonumber(L, -1);
 	float y = lua_tonumber(L, -2);
 	float z = lua_tonumber(L, -3);
+	SetPosition(x, y, z);
+	return 0;
+}
+
+void GameObject::SetPosition(float x, float y, float z)
+{
 	float w = 1.0f;
 	float d = 1.0f;
 	billbordTile->vertices[0].point = glm::vec3(x, y, z);
 	billbordTile->vertices[1].point = glm::vec3(x + w, y, z);
 	billbordTile->vertices[2].point = glm::vec3(x + w, y + d, z);
 	billbordTile->vertices[3].point = glm::vec3(x, y + d, z);
+	billbordTile->UpdateVRAMData();
+}
 
-	return 0;
+void GameObject::SetPosition(glm::vec3 position)
+{
+	SetPosition(position.x, position.y, position.z);
 }
