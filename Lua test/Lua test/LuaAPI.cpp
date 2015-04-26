@@ -31,7 +31,6 @@ extern "C" {
 		float y = lua_tonumber(L, 3);
 		float z = lua_tonumber(L, 4);
 		(*gobj)->SetPosition(x, y, z);
-		//gobj->SetPosition(x, y, z);
 		return 0;
 	}
 
