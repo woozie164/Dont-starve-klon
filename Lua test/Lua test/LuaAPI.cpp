@@ -3,6 +3,7 @@
 #include <string>
 #include "GameObject.h"
 #include "World.h"
+#include <Windows.h>
 
 extern World world;
 
@@ -47,6 +48,19 @@ extern "C" {
 	}
 }
 
+void WatchLuaDirectory()
+{
+	// Register to recieve a notification whenever a Lua script has been changed.
+	HANDLE h = FindFirstChangeNotification(
+		L"C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/lua",
+		true,
+		FILE_NOTIFY_CHANGE_LAST_WRITE);
+	if (h == INVALID_HANDLE_VALUE)
+	{
+		printf("FindFirstChangeNotification function failed.\n");
+	}
+}
+
 // Start the lua interpreter, open standard libs, and expose C++ method to lua
 lua_State * L;
 void InitLua()
@@ -78,4 +92,6 @@ void InitLua()
 		std::cerr << "Unable to run:" << lua_tostring(L, 1);
 		lua_pop(L,1);
 	}
+
+	WatchLuaDirectory();
 }
