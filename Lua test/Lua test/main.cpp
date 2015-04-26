@@ -12,8 +12,10 @@
 #include "src\SOIL.h"
 #include "Tile.h"
 #include "GameObject.h"
+#include "World.h"
 
 ShaderProgramManager spm;
+World world;
 
  extern void InitLua();
  extern lua_State * L;
@@ -285,6 +287,8 @@ int main( int argc, char ** argv )
 		}
 
 		mainCharacter.Draw();
+
+		world.Render();
 
 		glValidateProgram(planeProg);
 		GLint result;

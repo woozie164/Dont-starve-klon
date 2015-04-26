@@ -2,6 +2,9 @@
 #include <iostream>
 #include <string>
 #include "GameObject.h"
+#include "World.h"
+
+extern World world;
 
 
 extern "C" {
@@ -10,6 +13,8 @@ extern "C" {
 		GameObject** gobj = reinterpret_cast<GameObject**>(lua_newuserdata( L, sizeof( GameObject* ) ));
 
 		*gobj = new GameObject();
+		world.AddGameObject(*gobj);		
+		world.AddDrawable((Drawable *)*gobj);
 		return 1;
 	}
 

@@ -1,8 +1,9 @@
 #pragma once
 #include "Tile.h"
 #include "lua.hpp"
+#include "Drawable.h"
 
-class GameObject
+class GameObject : Drawable
 {
 	Tile * billbordTile;
 public:
@@ -10,6 +11,7 @@ public:
 	~GameObject();
 
 	void Draw();
+	void Update();
 
 	int SetPosition(lua_State * L);
 	void SetPosition(float x, float y, float z);

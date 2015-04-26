@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Drawable.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glfw3.h" />
     <ClInclude Include="glfw3native.h" />

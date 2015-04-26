@@ -28,6 +28,11 @@ void GameObject::Draw()
 	billbordTile->Draw();
 }
 
+void GameObject::Update()
+{
+
+}
+
 int GameObject::SetPosition(lua_State * L)
 {
 	int n = lua_gettop(L);
