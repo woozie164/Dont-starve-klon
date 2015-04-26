@@ -14,6 +14,7 @@
 #include "GameObject.h"
 #include "World.h"
 
+
 ShaderProgramManager spm;
 World world;
 
@@ -289,6 +290,15 @@ int main( int argc, char ** argv )
 		mainCharacter.Draw();
 
 		world.Render();
+
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+			int error = luaL_loadfile(L, "lua/LuaAPItest.lua") || lua_pcall(L, 0, 0, 0);
+			if (error)
+			{
+				std::cerr << "Unable to run:" << lua_tostring(L, 1);
+				lua_pop(L, 1);
+			}
+		}		
 
 		glValidateProgram(planeProg);
 		GLint result;

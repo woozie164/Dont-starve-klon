@@ -15,5 +15,8 @@ public:
 
 	void AddGameObject(GameObject * gobj);
 	void AddDrawable(Drawable * drawable);
+
+	void RemoveGameObject(GameObject * gobj);
+	void RemoveDrawable(Drawable * drawable);
 };
 

@@ -24,7 +24,7 @@ extern "C" {
 		int n = lua_gettop(L);
 		if (n != 4)
 		{			
-			std::cerr << __FUNCTION__ << " expected 4 argument, " << n << " arguments found." << std::endl;
+			std::cerr << __FUNCTION__ << " expected 4 arguments, " << n << " arguments found." << std::endl;
 			return 0;
 		}
 		GameObject** gobj = reinterpret_cast<GameObject**>(lua_touserdata(L,1));
@@ -32,6 +32,22 @@ extern "C" {
 		float y = lua_tonumber(L, 3);
 		float z = lua_tonumber(L, 4);
 		(*gobj)->SetPosition(x, y, z);
+		return 0;
+	}
+
+	static int l_GameObject_Delete(lua_State * L)
+	{
+		int n = lua_gettop(L);
+		if (n != 1) {
+			std::cerr << __FUNCTION__ << " expected 1 arguments, " << n << " arguments found." << std::endl;
+			return 0;
+		}
+
+		GameObject** gobj = reinterpret_cast<GameObject**>(lua_touserdata(L, 1));
+		world.RemoveGameObject(*gobj);
+		world.RemoveDrawable((Drawable *)*gobj);
+		delete *gobj;
+
 		return 0;
 	}
 
@@ -77,6 +93,9 @@ void InitLua()
 
 	lua_pushcfunction(L, l_GameObject_SetPosition);
 	lua_setglobal(L, "GameObject_SetPosition");
+
+	lua_pushcfunction(L, l_GameObject_Delete);
+	lua_setglobal(L, "GameObject_Delete");
 
 	// Run a Lua script file
 	int error = luaL_loadfile(L, "lua/functiontest.lua") || lua_pcall(L, 0, 0, 0);
