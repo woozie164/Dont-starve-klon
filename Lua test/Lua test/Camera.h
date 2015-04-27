@@ -26,6 +26,7 @@ public:
 	~Camera();
 
 	void Update(float dt);
+	glm::vec3 ScreenToWorldCoord(float x, float y);
 	//glm::vec3 GetCameraPosition() { return glm::vec3(viewMat[3][0], viewMat[3][1], viewMat[3][2]); }
 };
 

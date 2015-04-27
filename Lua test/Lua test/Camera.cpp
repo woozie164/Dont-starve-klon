@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "glfw3.h"
 #include "glm\ext.hpp"
+#include <iostream>
 
 extern GLFWwindow * window;
 
@@ -118,3 +119,33 @@ void Camera::Update(float dt)
 		up                  // Head is up (set to 0,-1,0 to look upside-down)
 	);
 }
+
+glm::vec3 Camera::ScreenToWorldCoord(float x, float y)
+{	
+	std::cout << "x: " << x << std::endl;
+	std::cout << "y: " << y << std::endl;
+	if (type == TOP_DOWN)
+	{
+		// Get the cameras position in screen space
+		float screenCenterX = 640.0f / 2.0f;
+		float screenCenterY = 480.0f / 2.0f;
+
+		// Caluclate the difference between the cameras
+		// screen space position and the cursors.
+		float screendx = screenCenterX - x;
+		float screendy = screenCenterY - y;
+
+		// doens't work.
+		float worldx = cameraPosition.x - screenCenterX;
+		float worldy = cameraPosition.y - screenCenterY;
+		std::cout << "World x: " << screendx << std::endl;
+		std::cout << "World y: " << screendy << std::endl;		
+	}
+	else
+	{
+		std::cout << "Haven't implemented this yet!" << std::endl;
+	}
+
+	return glm::vec3();
+}
+

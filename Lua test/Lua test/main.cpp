@@ -306,7 +306,11 @@ int main( int argc, char ** argv )
 				std::cerr << "Unable to run:" << lua_tostring(L, 1);
 				lua_pop(L, 1);
 			}
-		}		
+		}	
+
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
+		camera.ScreenToWorldCoord(x, y);
 
 		glValidateProgram(planeProg);
 		GLint result;
