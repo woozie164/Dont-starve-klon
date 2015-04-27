@@ -10,7 +10,7 @@ Camera::Camera()
 	cameraSpeed = 3.0f;
 	horizontalAngle = 0.0f;
 	verticalAngle = 0.0f;
-	type = TOP_DOWN;
+	type = ISOMETRIC;
 }
 
 
@@ -27,7 +27,7 @@ void Camera::Update(float dt)
 	glm::vec3 up;
 	glm::vec3 direction;
 	glm::vec3 right;
-	if (type != TOP_DOWN)
+	if (type == FREE)
 	{
 		// Reset mouse position for next frame
 		glfwSetCursorPos(window, 640 / 2.0, 480 / 2.0);
@@ -52,14 +52,29 @@ void Camera::Update(float dt)
 
 		// Up vector	 
 		 up = glm::cross(right, direction);
+		 cameraSpeed = 3.0f;
 	}
-	else
+	else if (type == TOP_DOWN)
 	{
 		up = glm::vec3(0.0f, 0.0f, 1.0f);
 		direction = glm::vec3(0.0f, -1.0f, 0.0f);
 		right = glm::vec3(-1.0f, 0.0f, 0.0f);
 		cameraPosition.y = 30.0f;
 		cameraSpeed = 6.0f;
+	}
+	else
+	{
+		up = glm::vec3(0.0f, 1.0f, 0.0f);
+		horizontalAngle = -728.854736f;
+		verticalAngle = -120.005180f;
+		direction = glm::vec3(
+			cos(verticalAngle) * sin(horizontalAngle),
+			sin(verticalAngle),
+			cos(verticalAngle) * cos(horizontalAngle)
+		);
+		right = glm::vec3(-1.0f, 0.0f, 0.0f);
+		cameraPosition.y = 6.20885277f;		
+		cameraSpeed = 3.0f;
 	}
 	
 	// Move forward

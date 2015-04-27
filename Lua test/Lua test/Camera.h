@@ -5,13 +5,14 @@
 
 class Camera
 {
+public:
 	enum CAMERA_TYPE
 	{
 		FREE,
 		ISOMETRIC,
 		TOP_DOWN,
 	};
-public:
+
 	glm::vec3 cameraPosition;
 	glm::mat4 viewMat;
 	glm::mat4 projMat;

@@ -244,10 +244,18 @@ int main( int argc, char ** argv )
 
 		glUseProgram(planeProg);
 
-		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-			camera.cameraPosition = glm::vec3(14.1046686f, 5.20885277f, 0.567461133f);
+		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+			/*camera.cameraPosition = glm::vec3(14.1046686f, 5.20885277f, 0.567461133f);
 			camera.horizontalAngle = -728.854736f;
 			camera.verticalAngle = -120.005180f;
+			*/
+			camera.type = Camera::ISOMETRIC;
+		}
+		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
+			camera.type = Camera::TOP_DOWN;
+		}
+		if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+			camera.type = Camera::FREE;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {			
