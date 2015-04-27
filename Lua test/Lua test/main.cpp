@@ -288,7 +288,7 @@ int main( int argc, char ** argv )
 		}
 
 		mainCharacter.Draw();
-
+		world.Update();
 		world.Render();
 
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {

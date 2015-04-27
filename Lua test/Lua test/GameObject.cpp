@@ -16,6 +16,11 @@ GameObject::GameObject()
 	billbordTile->vertices[2].point = glm::vec3(x + w, y + d, z);
 	billbordTile->vertices[3].point = glm::vec3(x, y + d, z);
 	billbordTile->SetTileType(Grass);
+
+	collisionBox.max[0] = 1;
+	collisionBox.max[1] = 1;
+	collisionBox.min[0] = 0;
+	collisionBox.min[1] = 0;
 }
 
 
@@ -57,6 +62,7 @@ void GameObject::SetPosition(float x, float y, float z)
 	billbordTile->vertices[2].point = glm::vec3(x + w, y + d, z);
 	billbordTile->vertices[3].point = glm::vec3(x, y + d, z);
 	billbordTile->UpdateVRAMData();
+	collisionBox.SetPosition(x, y);
 }
 
 void GameObject::SetPosition(glm::vec3 position)

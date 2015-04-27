@@ -2,11 +2,15 @@
 #include "Tile.h"
 #include "lua.hpp"
 #include "Drawable.h"
+#include "AABB.h"
 
 class GameObject : Drawable
 {
 	Tile * billbordTile;
+	
 public:
+	AABB collisionBox;
+
 	GameObject();
 	~GameObject();
 

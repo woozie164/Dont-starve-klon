@@ -1,5 +1,6 @@
 #include "World.h"
 #include "Drawable.h"
+#include <iostream>
 
 World::World()
 {
@@ -51,6 +52,20 @@ void World::Update()
 	for (unsigned int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update();
+	}
+
+	for (unsigned int i = 0; i < gameObjects.size(); i++)
+	{
+		for (unsigned int j = 0; j < gameObjects.size(); j++)
+		{
+			// Don't collide with yourself
+			if (i == j)
+				continue;
+			if (gameObjects[i]->collisionBox.Intersect(gameObjects[j]->collisionBox))
+			{			
+				std::cout << "Collision!" << std::endl;
+			}
+		}
 	}
 }
 
