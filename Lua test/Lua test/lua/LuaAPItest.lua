@@ -20,8 +20,33 @@ function eat( eater, food )
 	end
 end
 
+function isfood( food ) 
+	if food and food.foodValue then
+		return true 
+	else 
+		return false 
+	end 
+end
+
+function iseater( food )
+	if eater and eater.hungerValue then
+		return true
+	else
+		return false
+	end
+end
+
+
 local testEater = {}
 testEater["hunger"] = 100
 
 eat(testEater, foodObj)
+testEater["eat"] = eat
+testEater:eat(foodObj)
+
+function oncollision( self, other )
+	if iseater(self) and isfood(other) then
+		print("Ate someting")
+	end	
+end
 

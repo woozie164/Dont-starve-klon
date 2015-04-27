@@ -5,7 +5,7 @@ struct AABB
 	float min[2];
 	float max[2];
 
-	bool Intersect(AABB box)
+	bool Intersect(const AABB & box)
 	{
 		if (max[0] < box.min[0] || min[0] > box.max[0]) return false;
 		if (max[1] < box.min[1] || min[1] > box.max[1]) return false;

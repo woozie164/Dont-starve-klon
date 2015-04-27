@@ -5,6 +5,12 @@
 
 class Camera
 {
+	enum CAMERA_TYPE
+	{
+		FREE,
+		ISOMETRIC,
+		TOP_DOWN,
+	};
 public:
 	glm::vec3 cameraPosition;
 	glm::mat4 viewMat;
@@ -13,6 +19,7 @@ public:
 	float cameraSpeed;
 	float horizontalAngle;
 	float verticalAngle;
+	CAMERA_TYPE type;
 
 	Camera();
 	~Camera();
