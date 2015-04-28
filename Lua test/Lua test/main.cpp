@@ -287,7 +287,9 @@ int main( int argc, char ** argv )
 		glUniformMatrix4fv(u_projection2, 1, GL_FALSE, glm::value_ptr(camera.projMat));
 		glUniformMatrix4fv(u_view2, 1, GL_FALSE, glm::value_ptr(camera.viewMat));
 		terrain.Draw();
-
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
+		camera.ScreenToWorldCoord(x, y);
 		//tile.Draw();
 		//tile2.Draw();
 		for ( int i  = 0; i < tiles.size(); i++ )
@@ -308,9 +310,8 @@ int main( int argc, char ** argv )
 			}
 		}	
 
-		double x, y;
-		glfwGetCursorPos(window, &x, &y);
-		camera.ScreenToWorldCoord(x, y);
+	
+
 
 		glValidateProgram(planeProg);
 		GLint result;

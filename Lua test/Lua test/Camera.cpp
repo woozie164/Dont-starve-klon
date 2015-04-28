@@ -122,6 +122,29 @@ void Camera::Update(float dt)
 
 glm::vec3 Camera::ScreenToWorldCoord(float x, float y)
 {	
+	glm::mat4 inverse = glm::inverse(projMat * viewMat);
+
+	// Transform to a value between -1 and 1
+	// 320.0f is half the screen width
+	// 240 is half the screen height
+	x -= 320.0f;
+	x /= 320.0f;
+	y -= 240.0f;
+	y /= 240.0f;
+	x = glm::clamp(x, -1.0f, 1.0f);
+	y = glm::clamp(y, -1.0f, 1.0f);
+	y *= -1.0f; // invert this axis
+
+	glm::vec4 screenPos(x, 3.5f, y, 1.0f);
+	glm::vec4 worldPos = inverse * screenPos;
+	worldPos *= 1.0f / worldPos.w;
+	worldPos.y = 4.0f;
+
+	glPointSize(100.0f);
+	glBegin(GL_POINTS);
+	glVertex3f(worldPos.x, worldPos.y, worldPos.z);
+	glEnd();
+	/*
 	std::cout << "x: " << x << std::endl;
 	std::cout << "y: " << y << std::endl;
 	if (type == TOP_DOWN)
@@ -145,7 +168,9 @@ glm::vec3 Camera::ScreenToWorldCoord(float x, float y)
 	{
 		std::cout << "Haven't implemented this yet!" << std::endl;
 	}
-
-	return glm::vec3();
+	*/
+	std::cout << "x: " << worldPos.x << std::endl;
+	std::cout << "z: " << worldPos.z << std::endl;
+	return glm::vec3(worldPos);
 }
 
