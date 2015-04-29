@@ -313,23 +313,22 @@ int main( int argc, char ** argv )
 			glm::vec3 planeNormal(0.0f, 1.0f, 0.0f);
 			float t = RayPlaneIntersection(rayOrigin, rayDirection, planeNormal, d);
 			cout << "t = " << t << endl;
-			if(t > 0.0f) {
-				cout << "Intersection!" << endl;				
-			}
 			glm::vec3 worldPos = rayOrigin + rayDirection * t;
-
+			if(t > 0.0f) {
+				cout << "Intersection!" << endl;	
+				for (unsigned int i = 0; i < tiles.size(); i++)
+				{
+					if (tiles[i].collisionBox.InsideBox(worldPos.x, worldPos.z)) {
+						cout << "Inside box nr " << i << endl;
+						tiles[i].SetTileType(Rock);
+					}
+				}
+			}
 			/*
-			glm::vec3 rayOrigin = camera.ScreenToWorldCoord(x, z);
-			glm::vec3 planeNormal(0.0f, 1.0f, 0.0f);
-			float d = 0.0f;
-			glm::vec3 rayDirection = rayOrigin - camera.cameraPosition;
-			rayDirection = glm::normalize(rayDirection);
-			float t = (d + glm::dot(-camera.cameraPosition, planeNormal)) / glm::dot(rayDirection, planeNormal);
-			glm::vec3 worldPos = camera.cameraPosition + rayDirection * t;
-			*/
 			Tile * tile = new Tile(4.0f, 4.0f, worldPos.x, d, worldPos.z);	
 			tile->LoadTexture("tiles.png");
 			world.AddDrawable((Drawable *)tile);			
+			*/
 		}
 
 		//tile.Draw();

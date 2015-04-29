@@ -5,6 +5,7 @@
 #include "vertex.h"
 #include "Drawable.h"
 #include <vector>
+#include "AABB.h"
 
 
 enum TileType
@@ -25,7 +26,7 @@ class Tile : Drawable
 	void InitBuffers();
 public:
 	std::vector<VertexData> vertices;
-
+	AABB collisionBox;
 
 	Tile();
 	~Tile();
