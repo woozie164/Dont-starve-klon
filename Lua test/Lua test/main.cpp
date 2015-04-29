@@ -21,6 +21,13 @@ World world;
  extern void InitLua();
  extern lua_State * L;
 
+float RayPlaneIntersection(glm::vec3 rayOrigin, glm::vec3 rayDirection, glm::vec3 planeNormal, float d)
+{
+	float t = (d - glm::dot(rayOrigin, planeNormal)) / glm::dot(rayDirection, planeNormal);
+
+	return t;	
+}
+
 struct Entity 
 {
 	float position[3];
@@ -290,6 +297,41 @@ int main( int argc, char ** argv )
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		camera.ScreenToWorldCoord(x, y);
+		
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+			//cout << "Test" << endl;
+			double x, z;
+			glfwGetCursorPos(window, &x, &z);
+
+			glm::vec3 rayOrigin = camera.cameraPosition;
+
+			// A ray pointing away from the origin towards the mouse cursor			
+			glm::vec3 rayDirection = camera.ScreenToWorldCoord(x, z) - rayOrigin;
+			rayDirection = glm::normalize(rayDirection);
+
+			float d = 3.5f; // The height of the plane
+			glm::vec3 planeNormal(0.0f, 1.0f, 0.0f);
+			float t = RayPlaneIntersection(rayOrigin, rayDirection, planeNormal, d);
+			cout << "t = " << t << endl;
+			if(t > 0.0f) {
+				cout << "Intersection!" << endl;				
+			}
+			glm::vec3 worldPos = rayOrigin + rayDirection * t;
+
+			/*
+			glm::vec3 rayOrigin = camera.ScreenToWorldCoord(x, z);
+			glm::vec3 planeNormal(0.0f, 1.0f, 0.0f);
+			float d = 0.0f;
+			glm::vec3 rayDirection = rayOrigin - camera.cameraPosition;
+			rayDirection = glm::normalize(rayDirection);
+			float t = (d + glm::dot(-camera.cameraPosition, planeNormal)) / glm::dot(rayDirection, planeNormal);
+			glm::vec3 worldPos = camera.cameraPosition + rayDirection * t;
+			*/
+			Tile * tile = new Tile(4.0f, 4.0f, worldPos.x, d, worldPos.z);	
+			tile->LoadTexture("tiles.png");
+			world.AddDrawable((Drawable *)tile);			
+		}
+
 		//tile.Draw();
 		//tile2.Draw();
 		for ( int i  = 0; i < tiles.size(); i++ )
@@ -309,9 +351,6 @@ int main( int argc, char ** argv )
 				lua_pop(L, 1);
 			}
 		}	
-
-	
-
 
 		glValidateProgram(planeProg);
 		GLint result;

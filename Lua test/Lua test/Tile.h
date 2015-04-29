@@ -3,6 +3,7 @@
 #include "glfw3.h"
 #include "glm\glm.hpp"
 #include "vertex.h"
+#include "Drawable.h"
 #include <vector>
 
 
@@ -13,7 +14,7 @@ enum TileType
 	Dirt
 };
 
-class Tile
+class Tile : Drawable
 {
 	GLuint VBO, VAO, elementVBO;
 	GLuint texture;

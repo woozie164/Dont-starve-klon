@@ -12,7 +12,7 @@ public:
 		ISOMETRIC,
 		TOP_DOWN,
 	};
-
+	glm::vec3 direction;
 	glm::vec3 cameraPosition;
 	glm::mat4 viewMat;
 	glm::mat4 projMat;
