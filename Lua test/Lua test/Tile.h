@@ -17,12 +17,13 @@ enum TileType
 
 class Tile : Drawable
 {
+	float width, depth;
 	GLuint VBO, VAO, elementVBO;
 	GLuint texture;
 	TileType type;
 
 	std::vector<unsigned int> indices;
-
+	bool VRAMDataflag; // Set to true when the VRAM data needs to update.
 	void InitBuffers();
 public:
 	std::vector<VertexData> vertices;
@@ -35,8 +36,9 @@ public:
 
 	void LoadTexture(const char * filename);
 	void Draw();
+	
+	void SetPosition(float x, float y, float z);
+	void SetTileType(TileType type);	
 	void UpdateVRAMData();
-
-	void Tile::SetTileType(TileType type);
 };
 

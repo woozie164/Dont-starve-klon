@@ -18,5 +18,8 @@ public:
 
 	void RemoveGameObject(GameObject * gobj);
 	void RemoveDrawable(Drawable * drawable);
+
+	void LoadWorld(const char * filename);
+	void SaveWorld(const char * filename);
 };
 

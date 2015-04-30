@@ -198,13 +198,7 @@ int main( int argc, char ** argv )
 	{
 		printf("SOIL loading error: '%s'\n", SOIL_last_result());
 	}
-	/*
-	Tile tile(4.0, 4.0f, 0.0f, 3.0f, 0.0f);
-	tile.LoadTexture("tiles.png");
 
-	Tile tile2(4.0f, 4.0f, 4.0f, 3.0f, 0.0f);
-	tile2.LoadTexture("tiles.png");
-	*/
 	// Create a plane that consists of several tiles
 	vector<Tile> tiles;
 	
@@ -252,10 +246,6 @@ int main( int argc, char ** argv )
 		glUseProgram(planeProg);
 
 		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-			/*camera.cameraPosition = glm::vec3(14.1046686f, 5.20885277f, 0.567461133f);
-			camera.horizontalAngle = -728.854736f;
-			camera.verticalAngle = -120.005180f;
-			*/
 			camera.type = Camera::ISOMETRIC;
 		}
 		if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {

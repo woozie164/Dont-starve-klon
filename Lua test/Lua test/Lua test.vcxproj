@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Food.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="LuaAPI.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Food.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glfw3.h" />

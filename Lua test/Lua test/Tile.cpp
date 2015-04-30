@@ -6,7 +6,20 @@ extern ShaderProgramManager spm;
 
 Tile::Tile()
 {
+	vertices.resize(4);
+
 	type = Grass;
+
+	indices.reserve(6);
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+
+	indices.push_back(0);
+	indices.push_back(2);
+	indices.push_back(3);
+	
+	VRAMDataflag = false;
 }
 
 
@@ -15,33 +28,12 @@ Tile::~Tile()
 }
 
 
-Tile::Tile(float width, float depth, float x, float y, float z) //: Tile()
-{
-	VertexData vert;
-	vert.point = glm::vec3(x, y, z);
-	vert.texCoord = glm::vec2(0.0f, 0.0f);
-	vertices.push_back(vert);
-	
-	vert.point = glm::vec3(x + width, y, z);
-	vert.texCoord = glm::vec2(1.0f, 0.0f);
-	vertices.push_back(vert);
+Tile::Tile(float width, float depth, float x, float y, float z) : Tile()
+{	
+	this->width = width;
+	this->depth = depth;
 
-	vert.point = glm::vec3(x + width, y, z + depth);
-	vert.texCoord = glm::vec2(1.0f, 1.0f);
-	vertices.push_back(vert);
-
-	vert.point = glm::vec3(x, y, z + depth);
-	vert.texCoord = glm::vec2(0.0f, 1.0f);
-	vertices.push_back(vert);
-
-	indices.push_back(0);
-	indices.push_back(1);
-	indices.push_back(2);
-
-	indices.push_back(0);
-	indices.push_back(2);
-	indices.push_back(3);
-
+	SetPosition(x, y, z);
 	SetTileType(type);
 
 	collisionBox.min[0] = x;
@@ -124,6 +116,11 @@ void Tile::InitBuffers()
 
 void Tile::Draw()
 {
+	if (VRAMDataflag) {
+		UpdateVRAMData();
+		VRAMDataflag = false;
+	}
+
 	glUseProgram(spm.GetShaderProgram("3dplanetex"));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -134,6 +131,21 @@ void Tile::Draw()
 	glBindVertexArray(0);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Tile::SetPosition(float x, float y, float z)
+{
+	vertices[0].point = glm::vec3(x, y, z);
+	vertices[1].point = glm::vec3(x + width, y, z);
+	vertices[2].point = glm::vec3(x + width, y, z + depth);
+	vertices[3].point = glm::vec3(x, y, z + depth);
+
+	collisionBox.min[0] = x;
+	collisionBox.min[1] = z;
+	collisionBox.max[0] = x + width;
+	collisionBox.max[1] = z + depth;
+
+	VRAMDataflag = true;
 }
 
 // Setting the tile type determines what part of the tiles.png image should be rendered
@@ -164,7 +176,7 @@ void Tile::SetTileType(TileType type)
 		break;
 	}
 
-	UpdateVRAMData();
+	VRAMDataflag = true;
 }
 
 void Tile::UpdateVRAMData()
