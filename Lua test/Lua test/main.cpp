@@ -309,7 +309,7 @@ int main( int argc, char ** argv )
 			glm::vec3 rayDirection = camera.ScreenToWorldCoord(x, z) - rayOrigin;
 			rayDirection = glm::normalize(rayDirection);
 
-			float d = 3.5f; // The height of the plane
+			float d = 3.0f; // The height of the plane
 			glm::vec3 planeNormal(0.0f, 1.0f, 0.0f);
 			float t = RayPlaneIntersection(rayOrigin, rayDirection, planeNormal, d);
 			cout << "t = " << t << endl;
