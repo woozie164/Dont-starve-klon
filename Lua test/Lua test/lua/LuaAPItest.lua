@@ -50,3 +50,5 @@ function oncollision( self, other )
 	end	
 end
 
+Tile_Create(4.0, 4.0, 4.0, 4.0, 0.0)
+

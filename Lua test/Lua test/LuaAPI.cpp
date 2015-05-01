@@ -51,6 +51,26 @@ extern "C" {
 		return 0;
 	}
 
+	static int l_Tile_Create(lua_State * L)
+	{
+		int n = lua_gettop(L);
+		if (n != 5) {
+			std::cerr << __FUNCTION__ << " expected 5 arguments, " << n << " arguments found." << std::endl;
+			return 0;
+		}
+
+		float width = lua_tonumber(L, 1);
+		float depth = lua_tonumber(L, 2);
+		float x = lua_tonumber(L, 3);
+		float y = lua_tonumber(L, 4);
+		float z = lua_tonumber(L, 5);
+
+		Tile ** tile = reinterpret_cast<Tile**>(lua_newuserdata(L, sizeof(Tile*)));
+		*tile = new Tile(width, depth, x, y, z);
+		world.AddDrawable((Drawable *)*tile);
+		return 1;
+	}
+
 	int test(lua_State * L)
 	{
 		int n = lua_gettop(L);
@@ -96,6 +116,9 @@ void InitLua()
 
 	lua_pushcfunction(L, l_GameObject_Delete);
 	lua_setglobal(L, "GameObject_Delete");
+
+	lua_pushcfunction(L, l_Tile_Create);
+	lua_setglobal(L, "Tile_Create");
 
 	// Run a Lua script file
 	int error = luaL_loadfile(L, "lua/functiontest.lua") || lua_pcall(L, 0, 0, 0);

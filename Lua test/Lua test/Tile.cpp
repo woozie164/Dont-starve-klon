@@ -42,6 +42,7 @@ Tile::Tile(float width, float depth, float x, float y, float z) : Tile()
 	collisionBox.min[1] = z;
 	collisionBox.max[0] = x + width;
 	collisionBox.max[1] = z + depth;
+	LoadTexture("");
 }
 
 
