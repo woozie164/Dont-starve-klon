@@ -6,6 +6,7 @@
 #include "Drawable.h"
 #include <vector>
 #include "AABB.h"
+#include "Serializable.h"
 
 
 enum TileType
@@ -15,7 +16,7 @@ enum TileType
 	Dirt
 };
 
-class Tile : Drawable
+class Tile : Drawable, Serializable
 {
 	float width, depth;
 	GLuint VBO, VAO, elementVBO;
@@ -40,5 +41,7 @@ public:
 	void SetPosition(float x, float y, float z);
 	void SetTileType(TileType type);	
 	void UpdateVRAMData();
+
+	void Serialize(std::ostream & s);
 };
 

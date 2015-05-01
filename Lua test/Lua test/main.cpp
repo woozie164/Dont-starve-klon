@@ -234,6 +234,7 @@ int main( int argc, char ** argv )
 
 	InitLua();
 
+	world.SaveWorld("testworld.lua");
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{		

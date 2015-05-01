@@ -69,3 +69,8 @@ void GameObject::SetPosition(glm::vec3 position)
 {
 	SetPosition(position.x, position.y, position.z);
 }
+
+void GameObject::Serialize(std::ostream & s)
+{
+	s << "test";
+}

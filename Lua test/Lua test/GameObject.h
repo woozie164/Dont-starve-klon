@@ -4,7 +4,7 @@
 #include "Drawable.h"
 #include "AABB.h"
 
-class GameObject : Drawable
+class GameObject : Drawable, Serializable
 {
 	Tile * billbordTile;
 	
@@ -20,5 +20,7 @@ public:
 	int SetPosition(lua_State * L);
 	void SetPosition(float x, float y, float z);
 	void SetPosition(glm::vec3 position);
+
+	void Serialize(std::ostream & s);
 };
 

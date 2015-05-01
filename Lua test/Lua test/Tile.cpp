@@ -1,6 +1,9 @@
 #include "Tile.h"
 #include "src\SOIL.h"
 #include "shaders.h"
+#include <sstream>
+
+using namespace std;
 
 GLuint Tile::texture;
 
@@ -192,4 +195,11 @@ void Tile::UpdateVRAMData()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * 4, vertices.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+// Serialize into something the lua interpreter can run to recreate the tile.
+void Tile::Serialize(ostream & s)
+{
+	s << "Create_Tile(" << width << ", " << depth << ", ";	
+	s << vertices[0].point.x << ", " << vertices[0].point.y << ", " << vertices[0].point.z << ")" << endl;
 }

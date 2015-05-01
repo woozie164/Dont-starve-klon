@@ -51,4 +51,5 @@ function oncollision( self, other )
 end
 
 Tile_Create(4.0, 4.0, 4.0, 4.0, 0.0)
+Tile_Create(4.0, 4.0, 8.0, 4.0, 0.0)
 

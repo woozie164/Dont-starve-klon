@@ -1,6 +1,9 @@
 #include "World.h"
 #include "Drawable.h"
 #include <iostream>
+#include <fstream>
+
+using namespace std;
 
 World::World()
 {
@@ -75,4 +78,25 @@ void World::Render()
 	{
 		drawables[i]->Draw();
 	}
+}
+
+void World::LoadWorld(const char * filename)
+{
+
+}
+void World::SaveWorld(const char * filename)
+{
+	ofstream f(filename);
+	if (!f.is_open()) {
+		cerr << __FUNCTION__ << " unable to open file " << filename << endl;
+		return;
+	}
+
+	for (unsigned int i = 0; i < drawables.size(); i++)
+	{
+		//Serializable * ptr = (Serializable *)drawables[i];
+		Serializable * ptr = reinterpret_cast<Serializable*>(drawables[i]);
+		ptr->Serialize(f);		
+	}
+	f.close();
 }

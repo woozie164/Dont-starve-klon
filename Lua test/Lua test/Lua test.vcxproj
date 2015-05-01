@@ -104,6 +104,7 @@
     <ClInclude Include="lua.hpp" />
     <ClInclude Include="luaconf.h" />
     <ClInclude Include="lualib.h" />
+    <ClInclude Include="Serializable.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="terrain.h" />
     <ClInclude Include="Tile.h" />
