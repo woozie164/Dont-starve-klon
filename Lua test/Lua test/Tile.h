@@ -19,7 +19,7 @@ class Tile : Drawable
 {
 	float width, depth;
 	GLuint VBO, VAO, elementVBO;
-	GLuint texture;
+	static GLuint texture;
 	TileType type;
 
 	std::vector<unsigned int> indices;

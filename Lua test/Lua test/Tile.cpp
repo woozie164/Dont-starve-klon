@@ -2,6 +2,8 @@
 #include "src\SOIL.h"
 #include "shaders.h"
 
+GLuint Tile::texture;
+
 extern ShaderProgramManager spm;
 
 Tile::Tile()
@@ -67,18 +69,22 @@ void Tile::LoadTexture(const char * filename)
 	
 	SOIL_free_image_data(image);
 	*/
-
-	texture = SOIL_load_OGL_texture
-		(
-			"tiles.png",
-			SOIL_LOAD_AUTO,
-			SOIL_CREATE_NEW_ID,
-			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-		);
-
-	if (texture == 0)
+	static bool firstTime = true;
+	if (firstTime)
 	{
-		printf("SOIL loading error: '%s'\n", SOIL_last_result());
+		Tile::texture = SOIL_load_OGL_texture
+			(
+				"tiles.png",
+				SOIL_LOAD_AUTO,
+				SOIL_CREATE_NEW_ID,
+				SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+			);
+
+		if (Tile::texture == 0)
+		{
+			printf("SOIL loading error: '%s'\n", SOIL_last_result());
+		}
+		firstTime = false;
 	}
 
 
@@ -123,7 +129,7 @@ void Tile::Draw()
 
 	glUseProgram(spm.GetShaderProgram("3dplanetex"));
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, Tile::texture);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -184,4 +190,5 @@ void Tile::UpdateVRAMData()
 	// Update the data that's already in the VRAM
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexData) * 4, vertices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
