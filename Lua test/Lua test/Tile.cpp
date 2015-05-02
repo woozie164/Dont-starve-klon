@@ -200,6 +200,6 @@ void Tile::UpdateVRAMData()
 // Serialize into something the lua interpreter can run to recreate the tile.
 void Tile::Serialize(ostream & s)
 {
-	s << "Create_Tile(" << width << ", " << depth << ", ";	
+	s << "Tile_Create(" << width << ", " << depth << ", ";	
 	s << vertices[0].point.x << ", " << vertices[0].point.y << ", " << vertices[0].point.z << ")" << endl;
 }

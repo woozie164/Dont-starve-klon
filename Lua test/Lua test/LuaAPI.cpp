@@ -16,6 +16,7 @@ extern "C" {
 		*gobj = new GameObject();
 		world.AddGameObject(*gobj);		
 		world.AddDrawable((Drawable *)*gobj);
+		world.AddSerializable((Serializable *)*gobj);
 		return 1;
 	}
 

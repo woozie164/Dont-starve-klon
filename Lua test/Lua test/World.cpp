@@ -4,6 +4,7 @@
 #include <fstream>
 
 using namespace std;
+extern lua_State * L;
 
 World::World()
 {
@@ -87,7 +88,12 @@ void World::Render()
 
 void World::LoadWorld(const char * filename)
 {
-
+	int error = luaL_loadfile(L, filename) || lua_pcall(L, 0, 0, 0);
+	if (error)
+	{
+		std::cerr << "Unable to run:" << lua_tostring(L, 1);
+		lua_pop(L, 1);
+	}
 }
 void World::SaveWorld(const char * filename)
 {
