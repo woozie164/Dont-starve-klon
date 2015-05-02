@@ -229,6 +229,7 @@ int main( int argc, char ** argv )
 	}
 	
 	GameObject mainCharacter;
+	world.AddGameObject(&mainCharacter);
 
 	glEnable(GL_DEPTH_TEST);
 

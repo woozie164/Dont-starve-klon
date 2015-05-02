@@ -4,7 +4,7 @@ local foodObj = {}
 foodObj["gobjptr"] = gobj 
 foodObj["foodValue"] = 10
 
-GameObject_SetPosition(gobj, 0.0, 5.0, 3.0)
+GameObject_SetPosition(gobj, 0.0, 3.0, 3.0)
 
 if foodObj and foodObj.foodValue then
 	print("The foodvalue is " .. foodObj["foodValue"])

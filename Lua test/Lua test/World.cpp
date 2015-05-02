@@ -61,10 +61,6 @@ void World::Update()
 	for (unsigned int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->Update();
-	}
-
-	for (unsigned int i = 0; i < gameObjects.size(); i++)
-	{
 		for (unsigned int j = 0; j < gameObjects.size(); j++)
 		{
 			// Don't collide with yourself
