@@ -237,6 +237,7 @@ int main( int argc, char ** argv )
 	//world.SaveWorld("testworld.lua");
 	world.LoadWorld("testworld.lua");
 	/* Loop until the user closes the window */
+	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
 	while (!glfwWindowShouldClose(window))
 	{		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -259,6 +260,31 @@ int main( int argc, char ** argv )
 
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {			
 			mainCharacter.SetPosition(3.0f, 3.0f, 0.0f);
+		}
+
+		// Character controls
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			characterPos.x += 0.05f;
+			mainCharacter.SetPosition(characterPos);
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			characterPos.x -= 0.05f;
+			mainCharacter.SetPosition(characterPos);
+		}
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			characterPos.z += 0.05f;
+			mainCharacter.SetPosition(characterPos);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			characterPos.z -= 0.05f;
+			mainCharacter.SetPosition(characterPos);
+		}
+
+		if (camera.type == Camera::ISOMETRIC) {
+			camera.direction = characterPos - camera.cameraPosition;
+			camera.cameraPosition = characterPos;
+			camera.cameraPosition.y += 7.0f;
+			camera.cameraPosition.z -= 5.0f;
 		}
 
 		camera.Update(deltaTime);

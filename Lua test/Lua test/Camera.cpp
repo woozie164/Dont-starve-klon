@@ -67,11 +67,13 @@ void Camera::Update(float dt)
 		up = glm::vec3(0.0f, 1.0f, 0.0f);
 		horizontalAngle = -728.854736f;
 		verticalAngle = -120.005180f;
+		/*
 		direction = glm::vec3(
 			cos(verticalAngle) * sin(horizontalAngle),
 			sin(verticalAngle),
-			cos(verticalAngle) * cos(horizontalAngle)
+			cos(verticalAngle) * cos(horizontalAngle)		
 		);
+		*/
 		right = glm::vec3(-1.0f, 0.0f, 0.0f);
 		cameraPosition.y = 6.20885277f;		
 		cameraSpeed = 3.0f;
