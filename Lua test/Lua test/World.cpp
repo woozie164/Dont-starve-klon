@@ -69,6 +69,16 @@ void World::Update()
 			if (gameObjects[i]->collisionBox.Intersect(gameObjects[j]->collisionBox))
 			{			
 				std::cout << "Collision!" << std::endl;
+				lua_getglobal(L, "oncollision");				
+				lua_pushlightuserdata(L, gameObjects[i]);
+				lua_pushlightuserdata(L, gameObjects[j]);				
+				cout << "world " << gameObjects[i] << endl;
+				cout << "world " << gameObjects[j] << endl;
+				int error = lua_pcall(L, 2, 0, 0);
+				if (error) {
+					std::cerr << "Unable to run:" << lua_tostring(L, 1);
+					lua_pop(L, 1);
+				}
 			}
 		}
 	}

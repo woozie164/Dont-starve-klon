@@ -16,7 +16,11 @@ function eat( eater, food )
 			eater.hunger = eater.hunger + food.foodValue
 			print("nom nom")
 			-- Remove food object
+		else
+			print("not an eater")
 		end
+	else 
+		print("not food")
 	end
 end
 
@@ -44,11 +48,25 @@ eat(testEater, foodObj)
 testEater["eat"] = eat
 testEater:eat(foodObj)
 
+local entities = {}
+--entities[1] = testEater;
+--entities[2] = foodObj;
+entities[gobj] = foodObj;
+local gobj2 = GameObject_Create()
+entities[gobj2] = testEater;
+print(gobj)
+print(gobj2)
+
 function oncollision( self, other )
-	if iseater(self) and isfood(other) then
-		print("Ate someting")
-	end	
+	-- Search the table containing all game objects to find the
+	-- game objects that match the values of the gobjptr sent as arguments
+	--for key, value in ipairs(entities) do
+	--	print(key .. " " .. value)
+	--end
+	eat(entities[self], entities[other])	
 end
+
+oncollision( gobj2, gobj )
 
 Tile_Create(4.0, 4.0, 4.0, 4.0, 0.0)
 Tile_Create(4.0, 4.0, 8.0, 4.0, 0.0)
