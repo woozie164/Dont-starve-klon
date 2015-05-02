@@ -24,6 +24,11 @@ void World::AddDrawable(Drawable * drawable)
 	drawables.push_back(drawable);
 }
 
+void World::AddSerializable(Serializable * serializable)
+{
+	serializables.push_back(serializable);
+}
+
 
 void World::RemoveGameObject(GameObject * gobj)
 {
@@ -92,11 +97,8 @@ void World::SaveWorld(const char * filename)
 		return;
 	}
 
-	for (unsigned int i = 0; i < drawables.size(); i++)
+	for (unsigned int i = 0; i < serializables.size(); i++)
 	{
-		//Serializable * ptr = (Serializable *)drawables[i];
-		Serializable * ptr = reinterpret_cast<Serializable*>(drawables[i]);
-		ptr->Serialize(f);		
+		serializables[i]->Serialize(f);	
 	}
-	f.close();
 }

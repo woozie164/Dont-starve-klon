@@ -6,6 +6,7 @@ class World
 {
 	std::vector<GameObject *> gameObjects;
 	std::vector<Drawable *> drawables;
+	std::vector<Serializable *> serializables;
 public:
 	World();
 	~World();
@@ -15,6 +16,7 @@ public:
 
 	void AddGameObject(GameObject * gobj);
 	void AddDrawable(Drawable * drawable);
+	void AddSerializable(Serializable * serializable);
 
 	void RemoveGameObject(GameObject * gobj);
 	void RemoveDrawable(Drawable * drawable);

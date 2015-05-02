@@ -68,6 +68,7 @@ extern "C" {
 		Tile ** tile = reinterpret_cast<Tile**>(lua_newuserdata(L, sizeof(Tile*)));
 		*tile = new Tile(width, depth, x, y, z);
 		world.AddDrawable((Drawable *)*tile);
+		world.AddSerializable((Serializable *)*tile);
 		return 1;
 	}
 
