@@ -11,12 +11,20 @@ extern World world;
 extern "C" {
 	static int l_GameObject_Create(lua_State * L)
 	{
-		GameObject** gobj = reinterpret_cast<GameObject**>(lua_newuserdata( L, sizeof( GameObject* ) ));
+		// Not so sure about creating a full user data. All I want is to 
+		// give Lua is a pointer to a C++ object so that Lua can compare this
+		// pointer to other pointers.
+		//GameObject** gobj = reinterpret_cast<GameObject**>(lua_newuserdata( L, sizeof( GameObject* ) ));
+		
+		
+		GameObject* gobj = new GameObject();
+		std::cout << "GameObject created: adress " << gobj << std::endl;
 
-		*gobj = new GameObject();
-		world.AddGameObject(*gobj);		
-		world.AddDrawable((Drawable *)*gobj);
-		world.AddSerializable((Serializable *)*gobj);
+		lua_pushlightuserdata(L, gobj);
+		
+		world.AddGameObject(gobj);		
+		world.AddDrawable((Drawable *)gobj);
+		world.AddSerializable((Serializable *)gobj);
 		return 1;
 	}
 
@@ -28,11 +36,11 @@ extern "C" {
 			std::cerr << __FUNCTION__ << " expected 4 arguments, " << n << " arguments found." << std::endl;
 			return 0;
 		}
-		GameObject** gobj = reinterpret_cast<GameObject**>(lua_touserdata(L,1));
+		GameObject* gobj = reinterpret_cast<GameObject*>(lua_touserdata(L,1));
 		float x = lua_tonumber(L, 2);
 		float y = lua_tonumber(L, 3);
 		float z = lua_tonumber(L, 4);
-		(*gobj)->SetPosition(x, y, z);
+		gobj->SetPosition(x, y, z);
 		return 0;
 	}
 

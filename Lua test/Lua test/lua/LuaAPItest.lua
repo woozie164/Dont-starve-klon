@@ -1,4 +1,4 @@
-local gobj = GameObject_Create()
+gobj = GameObject_Create()
 
 local foodObj = {}
 foodObj["gobjptr"] = gobj 
@@ -33,7 +33,7 @@ function isfood( food )
 end
 
 function iseater( food )
-	if eater and eater.hungerValue then
+	if eater and eater.hunger then
 		return true
 	else
 		return false
@@ -48,14 +48,20 @@ eat(testEater, foodObj)
 testEater["eat"] = eat
 testEater:eat(foodObj)
 
-local entities = {}
+entities = {}
 --entities[1] = testEater;
 --entities[2] = foodObj;
-entities[gobj] = foodObj;
-local gobj2 = GameObject_Create()
+entities[gobj] = foodObj
+gobj2 = GameObject_Create()
 entities[gobj2] = testEater;
 print(gobj)
 print(gobj2)
+
+gobj3 = GameObject_Create()
+testEater2 = {}
+testEater2["hunger"] = 50
+testEater2["foodValue"] = 50
+entities[gobj3] = testEater2
 
 function oncollision( self, other )
 	-- Search the table containing all game objects to find the
@@ -63,6 +69,11 @@ function oncollision( self, other )
 	--for key, value in ipairs(entities) do
 	--	print(key .. " " .. value)
 	--end
+	print("oncollision")
+	print(self)
+	print(other)
+	print(entities[self])
+	print(entities[other])
 	eat(entities[self], entities[other])	
 end
 
