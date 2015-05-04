@@ -419,18 +419,46 @@ int main( int argc, char ** argv )
 					fname,
 					260,
 					NULL,
-					(LPBOOL)&usedDefaultChar);
-				cout << fname << endl;
-				int error = luaL_loadfile(L, (char *)fname) || lua_pcall(L, 0, 0, 0);
-				if (error)
-				{				
-					std::cerr << "Unable to run:" << lua_tostring(L, 1);
-					lua_pop(L, 1);
-				}
-				wcout << szFile << endl;
-			}
-			int x = 0;
-			//world.LoadWorld("testworld.lua");
+					NULL);
+				world.LoadWorld(fname);
+			}			
+		}
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+			HWND hWnd = glfwGetWin32Window(window);
+
+			OPENFILENAME ofn;       // common dialog box structure
+			WCHAR szFile[260];       // buffer for file name			
+			HANDLE hf;              // file handle
+
+			// Initialize OPENFILENAME
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = hWnd;
+			ofn.lpstrFile = szFile;
+			// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+			// use the contents of szFile to initialize itself.
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+
+			if (GetSaveFileName(&ofn)) {
+				char fname[260];
+				bool usedDefaultChar;
+				WideCharToMultiByte(
+					CP_OEMCP,
+					0,
+					szFile,
+					-1,
+					fname,
+					260,
+					NULL,
+					NULL);
+				world.SaveWorld(fname);
+			}			
 		}
 
 		glValidateProgram(planeProg);
