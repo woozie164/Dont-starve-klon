@@ -16,6 +16,7 @@ function eat( eater, food )
 			eater.hunger = eater.hunger + food.foodValue
 			print("nom nom")
 			GameObject_Delete(food.gobjptr)
+			entities[food.gobjptr] = nil
 		else
 			print("not an eater")
 		end
@@ -83,6 +84,6 @@ end
 
 --oncollision( gobj2, gobj )
 
-Tile_Create(4.0, 4.0, 4.0, 4.0, 0.0)
-Tile_Create(4.0, 4.0, 8.0, 4.0, 0.0)
+--Tile_Create(4.0, 4.0, 4.0, 4.0, 0.0)
+--Tile_Create(4.0, 4.0, 8.0, 4.0, 0.0)
 
