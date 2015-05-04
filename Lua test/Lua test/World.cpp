@@ -79,6 +79,11 @@ void World::Update()
 					std::cerr << "Unable to run:" << lua_tostring(L, 1);
 					lua_pop(L, 1);
 				}
+				// Check that indices are not outside vector range
+				// This can happen after a collision if game objects were removed
+				if (i >= gameObjects.size() || j >= gameObjects.size()){
+					break;
+				}
 			}
 		}
 	}

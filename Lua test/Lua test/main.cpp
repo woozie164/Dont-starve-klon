@@ -14,7 +14,7 @@
 #include "GameObject.h"
 #include "World.h"
 
-
+GameObject * mainCharacter;
 ShaderProgramManager spm;
 World world;
 
@@ -228,8 +228,8 @@ int main( int argc, char ** argv )
 		}		
 	}
 	
-	GameObject mainCharacter;
-	world.AddGameObject(&mainCharacter);
+	//GameObject mainCharacter;
+	//world.AddGameObject(&mainCharacter);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -259,28 +259,29 @@ int main( int argc, char ** argv )
 			camera.type = Camera::FREE;
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {			
-			mainCharacter.SetPosition(3.0f, 3.0f, 0.0f);
-		}
+		if (mainCharacter) {
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {			
+				mainCharacter->SetPosition(3.0f, 3.0f, 0.0f);
+			}
 
-		// Character controls
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			characterPos.x += 0.05f;
-			mainCharacter.SetPosition(characterPos);
+			// Character controls
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+				characterPos.x += 0.05f;
+				mainCharacter->SetPosition(characterPos);
+			}
+			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+				characterPos.x -= 0.05f;
+				mainCharacter->SetPosition(characterPos);
+			}
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				characterPos.z += 0.05f;
+				mainCharacter->SetPosition(characterPos);
+			}
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+				characterPos.z -= 0.05f;
+				mainCharacter->SetPosition(characterPos);
+			}
 		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			characterPos.x -= 0.05f;
-			mainCharacter.SetPosition(characterPos);
-		}
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			characterPos.z += 0.05f;
-			mainCharacter.SetPosition(characterPos);
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			characterPos.z -= 0.05f;
-			mainCharacter.SetPosition(characterPos);
-		}
-
 		if (camera.type == Camera::ISOMETRIC) {
 			camera.direction = characterPos - camera.cameraPosition;
 			camera.cameraPosition = characterPos;
@@ -356,11 +357,21 @@ int main( int argc, char ** argv )
 		{
 			tiles[i].Draw();
 		}
-
-		mainCharacter.Draw();
+		
 		world.Update();
 		world.Render();
-
+		static double lastTimeFoodSpawn = currentTime;
+		if (currentTime - lastTimeFoodSpawn >= 5.0f)
+		{
+			lastTimeFoodSpawn = glfwGetTime();
+			cout << "Food created" << endl;
+			int error = luaL_loadfile(L, "lua/foodspawner.lua") || lua_pcall(L, 0, 0, 0);
+			if (error)
+			{
+				std::cerr << "Unable to run:" << lua_tostring(L, 1);
+				lua_pop(L, 1);
+			}
+		}
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
 			int error = luaL_loadfile(L, "lua/LuaAPItest.lua") || lua_pcall(L, 0, 0, 0);
 			if (error)

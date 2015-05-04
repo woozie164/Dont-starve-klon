@@ -15,7 +15,7 @@ function eat( eater, food )
 		if eater and eater.hunger then
 			eater.hunger = eater.hunger + food.foodValue
 			print("nom nom")
-			-- Remove food object
+			GameObject_Delete(food.gobjptr)
 		else
 			print("not an eater")
 		end
@@ -44,9 +44,9 @@ end
 local testEater = {}
 testEater["hunger"] = 100
 
-eat(testEater, foodObj)
+--eat(testEater, foodObj)
 testEater["eat"] = eat
-testEater:eat(foodObj)
+--testEater:eat(foodObj)
 
 entities = {}
 --entities[1] = testEater;
@@ -54,14 +54,18 @@ entities = {}
 entities[gobj] = foodObj
 gobj2 = GameObject_Create()
 entities[gobj2] = testEater;
+testEater["gobjptr"] = gobj2
 print(gobj)
 print(gobj2)
 
 gobj3 = GameObject_Create()
 testEater2 = {}
 testEater2["hunger"] = 50
-testEater2["foodValue"] = 50
+--testEater2["foodValue"] = 50
+testEater2["gobjptr"] = gobj3
 entities[gobj3] = testEater2
+GameObject_SetPosition(gobj3, 6.0, 3.0, 3.0)
+Set_As_Main_Character(gobj3)
 
 function oncollision( self, other )
 	-- Search the table containing all game objects to find the
@@ -77,7 +81,7 @@ function oncollision( self, other )
 	eat(entities[self], entities[other])	
 end
 
-oncollision( gobj2, gobj )
+--oncollision( gobj2, gobj )
 
 Tile_Create(4.0, 4.0, 4.0, 4.0, 0.0)
 Tile_Create(4.0, 4.0, 8.0, 4.0, 0.0)

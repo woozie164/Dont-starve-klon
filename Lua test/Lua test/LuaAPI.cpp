@@ -6,7 +6,7 @@
 #include <Windows.h>
 
 extern World world;
-
+extern GameObject * mainCharacter;
 
 extern "C" {
 	static int l_GameObject_Create(lua_State * L)
@@ -52,10 +52,10 @@ extern "C" {
 			return 0;
 		}
 
-		GameObject** gobj = reinterpret_cast<GameObject**>(lua_touserdata(L, 1));
-		world.RemoveGameObject(*gobj);
-		world.RemoveDrawable((Drawable *)*gobj);
-		delete *gobj;
+		GameObject* gobj = reinterpret_cast<GameObject*>(lua_touserdata(L, 1));
+		world.RemoveGameObject(gobj);
+		world.RemoveDrawable((Drawable *)gobj);
+		delete gobj;
 
 		return 0;
 	}
@@ -79,6 +79,18 @@ extern "C" {
 		world.AddDrawable((Drawable *)*tile);
 		world.AddSerializable((Serializable *)*tile);
 		return 1;
+	}
+	
+	static int l_Set_As_Main_Character(lua_State * L)
+	{
+		int n = lua_gettop(L);
+		if (n != 1) {
+			std::cerr << __FUNCTION__ << " expected 1 arguments, " << n << " arguments found." << std::endl;
+			return 0;
+		}
+		GameObject * gobj = reinterpret_cast<GameObject*>(lua_touserdata(L, 1));
+		mainCharacter = gobj;
+		return 0;
 	}
 
 	int test(lua_State * L)
@@ -129,6 +141,9 @@ void InitLua()
 
 	lua_pushcfunction(L, l_Tile_Create);
 	lua_setglobal(L, "Tile_Create");
+	
+	lua_pushcfunction(L, l_Set_As_Main_Character);
+	lua_setglobal(L, "Set_As_Main_Character");
 
 	// Run a Lua script file
 	int error = luaL_loadfile(L, "lua/functiontest.lua") || lua_pcall(L, 0, 0, 0);

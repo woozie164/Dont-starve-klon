@@ -36,10 +36,10 @@ void GameObject::Draw()
 	billbordTile->Draw();
 	glUseProgram(spm.GetShaderProgram("3dplanetex"));
 	glBegin(GL_QUADS);	
-	glVertex3f(collisionBox.min[0], 3.0f, collisionBox.min[1]);
-	glVertex3f(collisionBox.min[0] + 1.0f, 3.0f, collisionBox.min[1]);
-	glVertex3f(collisionBox.min[0], 3.0f, collisionBox.min[1] + 1.0f);
-	glVertex3f(collisionBox.max[0], 3.0f, collisionBox.max[1]);
+	glVertex3f(collisionBox.min[0], 3.1f, collisionBox.min[1]);
+	glVertex3f(collisionBox.min[0] + 1.0f, 3.1f, collisionBox.min[1]);
+	glVertex3f(collisionBox.min[0], 3.1f, collisionBox.min[1] + 1.0f);
+	glVertex3f(collisionBox.max[0], 3.1f, collisionBox.max[1]);
 	glEnd();
 	glUseProgram(0);
 }
