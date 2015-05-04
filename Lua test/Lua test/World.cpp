@@ -105,6 +105,7 @@ void World::LoadWorld(const char * filename)
 		std::cerr << "Unable to run:" << lua_tostring(L, 1);
 		lua_pop(L, 1);
 	}
+	cout << "World loaded, filename: " << filename << endl;
 }
 void World::SaveWorld(const char * filename)
 {
@@ -118,4 +119,5 @@ void World::SaveWorld(const char * filename)
 	{
 		serializables[i]->Serialize(f);	
 	}
+	cout << "World saved, filename: " << filename << endl;
 }
