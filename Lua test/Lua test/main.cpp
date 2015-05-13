@@ -17,6 +17,13 @@
 #include "GameObject.h"
 #include "World.h"
 #include <Windows.h>
+/*
+#include "openal-soft-1.16.0-bin\include\AL\al.h"
+#include "openal-soft-1.16.0-bin\include\AL\alext.h"
+#include "../../../openal-soft/examples/common/alhelpers.h"
+*/
+#include <fmod_studio.hpp>
+#include <fmod_errors.h>
 
 GameObject * mainCharacter;
 ShaderProgramManager spm;
@@ -29,10 +36,10 @@ float RayPlaneIntersection(glm::vec3 rayOrigin, glm::vec3 rayDirection, glm::vec
 {
 	float t = (d - glm::dot(rayOrigin, planeNormal)) / glm::dot(rayDirection, planeNormal);
 
-	return t;	
+	return t;
 }
 
-struct Entity 
+struct Entity
 {
 	float position[3];
 	std::string name;
@@ -40,7 +47,7 @@ struct Entity
 
 using namespace std;
 
-const GLfloat triangle[] = { 
+const GLfloat triangle[] = {
 	-1.0f, -1.0f, 0.0f,
 	-1.0f, 0.0f, 0.0f,
 	0.0f, 0.0f, 0.0f
@@ -75,8 +82,8 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 	// Ignore certain messages
 	switch (id)
 	{
-	// A verbose message about what type of memory was allocated for a buffer.
-	case 131185: 
+		// A verbose message about what type of memory was allocated for a buffer.
+	case 131185:
 		return;
 	}
 
@@ -124,8 +131,75 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 
 GLFWwindow* window;
 
-int main( int argc, char ** argv )
+int main(int argc, char ** argv)
 {
+	/*
+	if (InitAL() != 0) {
+		cerr << "Error when initalizing OpenAL" << endl;
+	}
+	const int NUM_BUFFERS = 1;
+	ALuint buffers[NUM_BUFFERS];
+
+	// Create the buffers
+	alGenBuffers(NUM_BUFFERS, buffers);
+	ALenum ALerror;
+	if ((ALerror = alGetError()) != AL_NO_ERROR)
+	{
+		printf("alGenBuffers : %d", ALerror);
+		return 0;
+	}
+	*/
+	/*
+	FMOD_RESULT fresult;
+	FMOD::Studio::System* system = NULL;
+
+	fresult = FMOD::Studio::System::create(&system); // Create the Studio System object.
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+
+	// Initialize FMOD Studio, which will also initialize FMOD Low Level
+	fresult = system->initialize(512, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, 0);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+	*/
+	FMOD::System     *system;
+	FMOD::Sound      *sound1, *sound2, *sound3;
+	FMOD::Channel    *channel = 0;
+	FMOD_RESULT       fresult;
+	unsigned int      version;
+
+	/*
+	Create a System object and initialize
+	*/
+	fresult = FMOD::System_Create(&system);      // Create the main system object.
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+
+	fresult = system->getVersion(&version);
+
+	if (version < FMOD_VERSION)
+	{
+		//Common_Fatal("FMOD lib version %08x doesn't match header version %08x", version, FMOD_VERSION);
+	}
+
+	fresult = system->init(512, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+
+	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/WaveGenerator/WaveGenerator/square_ampfreqADSRenv.wav", FMOD_DEFAULT, 0, &sound1);
+
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -243,8 +317,22 @@ int main( int argc, char ** argv )
 	
 	/* Loop until the user closes the window */
 	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
+
+	fresult = system->playSound(sound1, 0, false, &channel);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{		
+		fresult = system->update();
+		if (fresult != FMOD_OK)
+		{
+			printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+			exit(-1);
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		static double lastTime = glfwGetTime();
