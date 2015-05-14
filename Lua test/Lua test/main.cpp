@@ -198,8 +198,22 @@ int main(int argc, char ** argv)
 		exit(-1);
 	}
 
-	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/WaveGenerator/WaveGenerator/square_ampfreqADSRenv.wav", FMOD_DEFAULT, 0, &sound1);
+	//fresult = system->createSound("C:/Users/woozie/Documents/GitHub/WaveGenerator/WaveGenerator/square_ampfreqADSRenv.wav", FMOD_DEFAULT, 0, &sound1);
+	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_generic_1.mp3", FMOD_DEFAULT, 0, &sound1);	
+	//fresult = system->createSound("D:/Steam/steamapps/common/dont_starve/data/sound/common.fsb", FMOD_DEFAULT, 0, &sound1);
+	
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
 
+	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Chaplinesque2.mp3", FMOD_LOOP_NORMAL, 0, &sound2);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -314,19 +328,21 @@ int main(int argc, char ** argv)
 	InitLua();
 
 	//world.SaveWorld("testworld.lua");
-	
+	fresult = system->playSound(sound2, 0, false, &channel);
 	/* Loop until the user closes the window */
 	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
 
-	fresult = system->playSound(sound1, 0, false, &channel);
-	if (fresult != FMOD_OK)
-	{
-		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
-		exit(-1);
-	}
 
 	while (!glfwWindowShouldClose(window))
 	{		
+		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+			fresult = system->playSound(sound1, 0, false, &channel);
+			if (fresult != FMOD_OK)
+			{
+				printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+				exit(-1);
+			}
+		}
 		fresult = system->update();
 		if (fresult != FMOD_OK)
 		{
