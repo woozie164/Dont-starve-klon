@@ -81,6 +81,11 @@ void GameObject::SetPosition(glm::vec3 position)
 	SetPosition(position.x, position.y, position.z);
 }
 
+glm::vec3 GameObject::GetPosition()
+{
+	return billbordTile->vertices[0].point;
+}
+
 void GameObject::Serialize(std::ostream & s)
 {
 	s << "GameObject_Create()" << std::endl;

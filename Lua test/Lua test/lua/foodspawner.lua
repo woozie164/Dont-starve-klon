@@ -8,3 +8,4 @@ local food = {}
 food["foodValue"] = 30
 food["gobjptr"] = gobjptr
 entities[gobjptr] = food
+return gobjptr

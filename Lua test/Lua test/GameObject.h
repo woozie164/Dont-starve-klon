@@ -20,7 +20,7 @@ public:
 	int SetPosition(lua_State * L);
 	void SetPosition(float x, float y, float z);
 	void SetPosition(glm::vec3 position);
-
+	glm::vec3 GetPosition();
 	void Serialize(std::ostream & s);
 };
 

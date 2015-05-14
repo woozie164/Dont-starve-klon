@@ -227,7 +227,7 @@ int main(int argc, char ** argv)
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
-	fresult = sound3->set3DMinMaxDistance(0.5f, 5000.0f);
+	fresult = sound3->set3DMinMaxDistance(5.0f, 5000.0f);
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -500,18 +500,37 @@ int main(int argc, char ** argv)
 		{
 			lastTimeFoodSpawn = glfwGetTime();
 			cout << "Food created" << endl;
-			int error = luaL_loadfile(L, "lua/foodspawner.lua") || lua_pcall(L, 0, 0, 0);
+			int error = luaL_loadfile(L, "lua/foodspawner.lua") || lua_pcall(L, 0, 1, 0);
+			GameObject * gobj;
 			if (error)
 			{
 				std::cerr << "Unable to run:" << lua_tostring(L, 1);
 				lua_pop(L, 1);
 			}
+			else
+			{
+				gobj = reinterpret_cast<GameObject*>(lua_touserdata(L, 1));
+				lua_pop(L, 1);
+				glm::vec3 gobjPos = gobj->GetPosition();
+				FMOD_VECTOR pos = { gobjPos.x, gobjPos.y, gobjPos.z };
+				FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+
+				result = system->playSound(sound3, 0, true, &channel2);
+
+				result = channel2->set3DAttributes(&pos, &vel);
+
+				result = channel2->setPaused(false);
+			}
+	
+			/*
 			fresult = system->playSound(sound1, 0, false, &channel);
 			if (fresult != FMOD_OK)
 			{
 				printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 				exit(-1);
 			}
+			*/
+
 		}
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
 			int error = luaL_loadfile(L, "lua/LuaAPItest.lua") || lua_pcall(L, 0, 0, 0);
