@@ -170,7 +170,7 @@ int main(int argc, char ** argv)
 	*/
 	FMOD::System     *system;
 	FMOD::Sound      *sound1, *sound2, *sound3;
-	FMOD::Channel    *channel = 0;
+	FMOD::Channel    *channel = 0, *channel2 = 0;
 	FMOD_RESULT       fresult;
 	unsigned int      version;
 
@@ -178,6 +178,12 @@ int main(int argc, char ** argv)
 	Create a System object and initialize
 	*/
 	fresult = FMOD::System_Create(&system);      // Create the main system object.
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+	fresult = system->set3DSettings(1.0, 1.0f, 1.0f);
 	if (fresult != FMOD_OK)
 	{
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
@@ -214,6 +220,14 @@ int main(int argc, char ** argv)
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
+
+	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_generic_1.mp3", FMOD_3D, 0, &sound3);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+	fresult = sound3->set3DMinMaxDistance(0.5f, 5000.0f);
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -334,9 +348,22 @@ int main(int argc, char ** argv)
 
 
 	while (!glfwWindowShouldClose(window))
-	{		
+	{
+		FMOD_VECTOR listenerpos = { characterPos.x, characterPos.z, characterPos.z };
+		FMOD_VECTOR vel = { 1.0f, 0.0f, 0.0f };
+		FMOD_VECTOR forward = { 1.0f, 0.0f, 0.0f };
+		FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
+		fresult = system->set3DListenerAttributes(0, &listenerpos, &up, &forward, &up);
 		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
-			fresult = system->playSound(sound1, 0, false, &channel);
+			FMOD_VECTOR pos = { -5.0f, 0.0f, 0.0f };
+			FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+
+			result = system->playSound(sound3, 0, true, &channel2);
+			
+			result = channel2->set3DAttributes(&pos, &vel);
+			
+			result = channel2->setPaused(false);
+						
 			if (fresult != FMOD_OK)
 			{
 				printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
@@ -478,6 +505,12 @@ int main(int argc, char ** argv)
 			{
 				std::cerr << "Unable to run:" << lua_tostring(L, 1);
 				lua_pop(L, 1);
+			}
+			fresult = system->playSound(sound1, 0, false, &channel);
+			if (fresult != FMOD_OK)
+			{
+				printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+				exit(-1);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
