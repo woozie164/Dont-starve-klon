@@ -2,10 +2,14 @@
 #include "Drawable.h"
 #include <iostream>
 #include <fstream>
+#include <fmod_studio.hpp>
+#include <fmod_errors.h>
 
 using namespace std;
 extern lua_State * L;
-
+extern FMOD::System * soundsystem;
+extern FMOD::Sound *buffaloDeathSound;
+extern FMOD::Channel *channel;
 World::World()
 {
 }
@@ -79,6 +83,7 @@ void World::Update()
 					std::cerr << "Unable to run:" << lua_tostring(L, 1);
 					lua_pop(L, 1);
 				}
+				soundsystem->playSound(buffaloDeathSound, 0, false, &channel);
 				// Check that indices are not outside vector range
 				// This can happen after a collision if game objects were removed
 				if (i >= gameObjects.size() || j >= gameObjects.size()){

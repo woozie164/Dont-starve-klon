@@ -25,6 +25,7 @@
 #include <fmod_studio.hpp>
 #include <fmod_errors.h>
 
+
 GameObject * mainCharacter;
 ShaderProgramManager spm;
 World world;
@@ -130,7 +131,9 @@ void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLen
 }
 
 GLFWwindow* window;
-
+FMOD::System *soundsystem = nullptr;
+FMOD::Sound *buffaloDeathSound;
+FMOD::Channel    *channel = 0;
 int main(int argc, char ** argv)
 {
 	/*
@@ -168,36 +171,37 @@ int main(int argc, char ** argv)
 		exit(-1);
 	}
 	*/
-	FMOD::System     *system;
+	
 	FMOD::Sound      *sound1, *sound2, *sound3;
-	FMOD::Channel    *channel = 0, *channel2 = 0;
+	FMOD::Channel    *channel2 = 0;
 	FMOD_RESULT       fresult;
 	unsigned int      version;
 
 	/*
-	Create a System object and initialize
+	Create a soundsystem object and initialize
 	*/
-	fresult = FMOD::System_Create(&system);      // Create the main system object.
+	
+	fresult = FMOD::System_Create(&soundsystem);      // Create the main system object.
 	if (fresult != FMOD_OK)
 	{
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
-	fresult = system->set3DSettings(1.0, 1.0f, 1.0f);
+	fresult = soundsystem->set3DSettings(1.0, 1.0f, 1.0f);
 	if (fresult != FMOD_OK)
 	{
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
 
-	fresult = system->getVersion(&version);
+	fresult = soundsystem->getVersion(&version);
 
 	if (version < FMOD_VERSION)
 	{
 		//Common_Fatal("FMOD lib version %08x doesn't match header version %08x", version, FMOD_VERSION);
 	}
 
-	fresult = system->init(512, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
+	fresult = soundsystem->init(512, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
 	if (fresult != FMOD_OK)
 	{
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
@@ -205,7 +209,7 @@ int main(int argc, char ** argv)
 	}
 
 	//fresult = system->createSound("C:/Users/woozie/Documents/GitHub/WaveGenerator/WaveGenerator/square_ampfreqADSRenv.wav", FMOD_DEFAULT, 0, &sound1);
-	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_generic_1.mp3", FMOD_DEFAULT, 0, &sound1);	
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_generic_1.mp3", FMOD_DEFAULT, 0, &sound1);	
 	//fresult = system->createSound("D:/Steam/steamapps/common/dont_starve/data/sound/common.fsb", FMOD_DEFAULT, 0, &sound1);
 	
 	if (fresult != FMOD_OK)
@@ -213,15 +217,35 @@ int main(int argc, char ** argv)
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
-
-	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Chaplinesque2.mp3", FMOD_LOOP_NORMAL, 0, &sound2);
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_yell_1.mp3", FMOD_DEFAULT, 0, &buffaloDeathSound);	
 	if (fresult != FMOD_OK)
 	{
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
 
-	fresult = system->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_generic_1.mp3", FMOD_3D, 0, &sound3);
+	FMOD::Sound *walkingSound1, *walkingSound2;
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/footstep_tallgrass_.mp3", FMOD_DEFAULT, 0, &walkingSound1);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/footstep_tallgrass_2.mp3", FMOD_DEFAULT, 0, &walkingSound2);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Chaplinesque2.mp3", FMOD_LOOP_NORMAL, 0, &sound2);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/Beefalo_generic_1.mp3", FMOD_3D, 0, &sound3);
 	if (fresult != FMOD_OK)
 	{
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
@@ -342,7 +366,7 @@ int main(int argc, char ** argv)
 	InitLua();
 
 	//world.SaveWorld("testworld.lua");
-	fresult = system->playSound(sound2, 0, false, &channel);
+	fresult = soundsystem->playSound(sound2, 0, false, &channel);
 	/* Loop until the user closes the window */
 	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
 
@@ -353,12 +377,12 @@ int main(int argc, char ** argv)
 		FMOD_VECTOR vel = { 1.0f, 0.0f, 0.0f };
 		FMOD_VECTOR forward = { 1.0f, 0.0f, 0.0f };
 		FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
-		fresult = system->set3DListenerAttributes(0, &listenerpos, &up, &forward, &up);
+		fresult = soundsystem->set3DListenerAttributes(0, &listenerpos, &up, &forward, &up);
 		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
 			FMOD_VECTOR pos = { -5.0f, 0.0f, 0.0f };
 			FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 
-			result = system->playSound(sound3, 0, true, &channel2);
+			result = soundsystem->playSound(sound3, 0, true, &channel2);
 			
 			result = channel2->set3DAttributes(&pos, &vel);
 			
@@ -370,7 +394,7 @@ int main(int argc, char ** argv)
 				exit(-1);
 			}
 		}
-		fresult = system->update();
+		fresult = soundsystem->update();
 		if (fresult != FMOD_OK)
 		{
 			printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
@@ -399,8 +423,37 @@ int main(int argc, char ** argv)
 				mainCharacter->SetPosition(3.0f, 3.0f, 0.0f);
 			}
 
+			 
+			bool isMoving = ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ||
+				(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) ||
+				(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) ||
+				(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS));
+
+			// Play some walking sound if you're moving
+			if (isMoving) {
+				FMOD::Sound *currentSound;
+				channel->getCurrentSound(&currentSound);
+
+				bool playSound = (currentSound != walkingSound1 && currentSound != walkingSound2);
+				if (playSound) {
+					static int selectSound = 0;
+					selectSound = ++selectSound % 2;
+					switch (selectSound)
+					{
+					case 0:
+						soundsystem->playSound(walkingSound1, 0, false, &channel);
+						break;
+					case 1:
+						soundsystem->playSound(walkingSound2, 0, false, &channel);
+						break;
+					default:
+						cerr << "Unkown option" << endl;
+					}
+				}
+			}
+
 			// Character controls
-			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {					
 				characterPos.x += 3.0f * deltaTime;
 				mainCharacter->SetPosition(characterPos);
 			}
@@ -515,7 +568,7 @@ int main(int argc, char ** argv)
 				FMOD_VECTOR pos = { gobjPos.x, gobjPos.y, gobjPos.z };
 				FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 
-				result = system->playSound(sound3, 0, true, &channel2);
+				result = soundsystem->playSound(sound3, 0, true, &channel2);
 
 				result = channel2->set3DAttributes(&pos, &vel);
 
@@ -523,7 +576,7 @@ int main(int argc, char ** argv)
 			}
 	
 			/*
-			fresult = system->playSound(sound1, 0, false, &channel);
+			fresult = soundsystem->playSound(sound1, 0, false, &channel);
 			if (fresult != FMOD_OK)
 			{
 				printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
