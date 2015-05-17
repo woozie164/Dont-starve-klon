@@ -252,6 +252,17 @@ int main(int argc, char ** argv)
 		exit(-1);
 	}
 	fresult = sound3->set3DMinMaxDistance(5.0f, 5000.0f);
+
+	FMOD::Sound *fireSound;
+	fresult = soundsystem->createSound("C:/Users/woozie/Documents/GitHub/Dont-starve-klon/Lua test/Lua test/campfire_layer1_2_LP.mp3", FMOD_2D | FMOD_LOOP_NORMAL, 0, &fireSound);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+	FMOD::Channel *fireChannel;
+	soundsystem->playSound(fireSound, 0, false, &fireChannel);
+
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -367,17 +378,30 @@ int main(int argc, char ** argv)
 
 	//world.SaveWorld("testworld.lua");
 	fresult = soundsystem->playSound(sound2, 0, false, &channel);
+	
+	channel->setVolume(0.8f);
+	
 	/* Loop until the user closes the window */
 	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
 
-
 	while (!glfwWindowShouldClose(window))
 	{
+		// Calculate the sound volume of the fire effect
+		glm::vec3 firePos(5.0f, 3.0f, 0.0f);
+		float max_dist = 10.0f;
+		float min_dist = 1.0f;
+		float dist = glm::length(firePos - characterPos);		
+		float volume = ((max_dist - dist) / (max_dist - min_dist));
+		volume = glm::clamp(volume, 0.0f, 1.0f);
+		fireChannel->setVolume(volume);
+
+		// Calculate the 3D sound effects
 		FMOD_VECTOR listenerpos = { characterPos.x, characterPos.z, characterPos.z };
 		FMOD_VECTOR vel = { 1.0f, 0.0f, 0.0f };
 		FMOD_VECTOR forward = { 1.0f, 0.0f, 0.0f };
 		FMOD_VECTOR up = { 0.0f, 1.0f, 0.0f };
 		fresult = soundsystem->set3DListenerAttributes(0, &listenerpos, &up, &forward, &up);
+
 		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
 			FMOD_VECTOR pos = { -5.0f, 0.0f, 0.0f };
 			FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
@@ -548,6 +572,8 @@ int main(int argc, char ** argv)
 		
 		world.Update();
 		world.Render();
+
+		
 		static double lastTimeFoodSpawn = currentTime;
 		if (currentTime - lastTimeFoodSpawn >= 5.0f)
 		{
@@ -569,21 +595,9 @@ int main(int argc, char ** argv)
 				FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
 
 				result = soundsystem->playSound(sound3, 0, true, &channel2);
-
 				result = channel2->set3DAttributes(&pos, &vel);
-
 				result = channel2->setPaused(false);
 			}
-	
-			/*
-			fresult = soundsystem->playSound(sound1, 0, false, &channel);
-			if (fresult != FMOD_OK)
-			{
-				printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
-				exit(-1);
-			}
-			*/
-
 		}
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
 			int error = luaL_loadfile(L, "lua/LuaAPItest.lua") || lua_pcall(L, 0, 0, 0);
