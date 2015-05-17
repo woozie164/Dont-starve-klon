@@ -20,7 +20,7 @@ class Tile : Drawable, Serializable
 {
 	float width, depth;
 	GLuint VBO, VAO, elementVBO;
-	static GLuint texture;
+	GLuint texture;
 	TileType type;
 
 	std::vector<unsigned int> indices;

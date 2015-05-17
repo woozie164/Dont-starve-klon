@@ -24,10 +24,12 @@
 */
 #include <fmod_studio.hpp>
 #include <fmod_errors.h>
-
+#include "TextureManager.h"
+#include "FirePit.h"
 
 GameObject * mainCharacter;
 ShaderProgramManager spm;
+TextureManager texMan;
 World world;
 
  extern void InitLua();
@@ -368,7 +370,7 @@ int main(int argc, char ** argv)
 			
 		}		
 	}
-	
+
 	//GameObject mainCharacter;
 	//world.AddGameObject(&mainCharacter);
 
@@ -380,14 +382,15 @@ int main(int argc, char ** argv)
 	fresult = soundsystem->playSound(sound2, 0, false, &channel);
 	
 	channel->setVolume(0.8f);
-	
+	FirePit firePit;
+	world.AddDrawable((Drawable *)&firePit);
 	/* Loop until the user closes the window */
 	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		// Calculate the sound volume of the fire effect
-		glm::vec3 firePos(5.0f, 3.0f, 0.0f);
+		glm::vec3 firePos(4.0f, 3.1f, 4.0f);
 		float max_dist = 10.0f;
 		float min_dist = 1.0f;
 		float dist = glm::length(firePos - characterPos);		

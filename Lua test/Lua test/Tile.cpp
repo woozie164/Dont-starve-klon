@@ -2,12 +2,12 @@
 #include "src\SOIL.h"
 #include "shaders.h"
 #include <sstream>
+#include "TextureManager.h"
 
 using namespace std;
 
-GLuint Tile::texture;
-
 extern ShaderProgramManager spm;
+extern TextureManager texMan;
 
 Tile::Tile()
 {
@@ -45,7 +45,7 @@ Tile::Tile(float width, float depth, float x, float y, float z) : Tile()
 	collisionBox.min[1] = z;
 	collisionBox.max[0] = x + width;
 	collisionBox.max[1] = z + depth;
-	LoadTexture("");
+	LoadTexture("tiles.png");
 }
 
 
@@ -73,12 +73,15 @@ void Tile::LoadTexture(const char * filename)
 	
 	SOIL_free_image_data(image);
 	*/
+
+	texture = texMan.LoadTexture(filename);
+	/*
 	static bool firstTime = true;
 	if (firstTime)
 	{
 		Tile::texture = SOIL_load_OGL_texture
 			(
-				"tiles.png",
+				filename,
 				SOIL_LOAD_AUTO,
 				SOIL_CREATE_NEW_ID,
 				SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
@@ -90,7 +93,7 @@ void Tile::LoadTexture(const char * filename)
 		}
 		firstTime = false;
 	}
-
+	*/
 
 	/* I can't get this part to work, for some reason
 	so i changed the shader to always use texture unit 0
