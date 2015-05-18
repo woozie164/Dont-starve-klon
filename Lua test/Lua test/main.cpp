@@ -401,19 +401,10 @@ int main(int argc, char ** argv)
 		fireChannel->setVolume(volume);
 
 		// Calculate the sound panning
-		glm::vec3 dir = characterPos - firePos;
-		float angRad = atan2(dir.x, dir.z);
-		float angDeg = angRad * (180.0f / M_PI);
-		cout << "Angle: " << angDeg << endl;
-		/*
-		glm::vec3 ndir = glm::normalize(firePos - characterPos);
-		float position = (ndir.x / ndir.z);		
-		position *= 0.5f; 
-		glm::vec2 pan;
-		pan.x = position - 0.5f;
-		pan.y = position + 0.5f;
-		*/
-		
+		glm::vec3 dir = characterPos - firePos;		
+		float pan = glm::normalize(dir).x;
+		fireChannel->setPan(pan);
+
 		// Calculate the 3D sound effects
 		FMOD_VECTOR listenerpos = { characterPos.x, characterPos.z, characterPos.z };
 		FMOD_VECTOR vel = { 1.0f, 0.0f, 0.0f };
