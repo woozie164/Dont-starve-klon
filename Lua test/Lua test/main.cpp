@@ -26,6 +26,8 @@
 #include <fmod_errors.h>
 #include "TextureManager.h"
 #include "FirePit.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 GameObject * mainCharacter;
 ShaderProgramManager spm;
@@ -398,6 +400,20 @@ int main(int argc, char ** argv)
 		volume = glm::clamp(volume, 0.0f, 1.0f);
 		fireChannel->setVolume(volume);
 
+		// Calculate the sound panning
+		glm::vec3 dir = characterPos - firePos;
+		float angRad = atan2(dir.x, dir.z);
+		float angDeg = angRad * (180.0f / M_PI);
+		cout << "Angle: " << angDeg << endl;
+		/*
+		glm::vec3 ndir = glm::normalize(firePos - characterPos);
+		float position = (ndir.x / ndir.z);		
+		position *= 0.5f; 
+		glm::vec2 pan;
+		pan.x = position - 0.5f;
+		pan.y = position + 0.5f;
+		*/
+		
 		// Calculate the 3D sound effects
 		FMOD_VECTOR listenerpos = { characterPos.x, characterPos.z, characterPos.z };
 		FMOD_VECTOR vel = { 1.0f, 0.0f, 0.0f };
