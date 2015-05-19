@@ -400,10 +400,18 @@ int main(int argc, char ** argv)
 		volume = glm::clamp(volume, 0.0f, 1.0f);
 		fireChannel->setVolume(volume);
 
-		// Calculate the sound panning
+		// Sound panning
+		// Calculate position of the character relative to the audio source
 		glm::vec3 dir = characterPos - firePos;		
-		float pan = glm::normalize(dir).x;
-		fireChannel->setPan(pan);
+		float pan = glm::normalize(dir).x;		
+		//fireChannel->setPan(pan);
+
+		// Calculate the output volume using constant power
+		float leftVolume = (sqrt(2) / 2.0f) * (cos(pan) - sin(pan));
+		float rightVolume = (sqrt(2) / 2.0f) * (cos(pan) + sin(pan));		
+		// Set all other ouputs to zero, since this is a mix for stereo speakers only.
+		fireChannel->setMixLevelsOutput(leftVolume, rightVolume,
+			0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f); 
 
 		// Calculate the 3D sound effects
 		FMOD_VECTOR listenerpos = { characterPos.x, characterPos.z, characterPos.z };
