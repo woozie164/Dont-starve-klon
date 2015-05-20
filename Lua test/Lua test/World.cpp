@@ -78,12 +78,17 @@ void World::Update()
 				lua_pushlightuserdata(L, gameObjects[j]);				
 				cout << "world " << gameObjects[i] << endl;
 				cout << "world " << gameObjects[j] << endl;
-				int error = lua_pcall(L, 2, 0, 0);
+				int error = lua_pcall(L, 2, 1, 0);
 				if (error) {
 					std::cerr << "Unable to run:" << lua_tostring(L, 1);
 					lua_pop(L, 1);
+				} else {
+					// If this script return not nil it means an object was removed.
+					if (!lua_isnil(L, 1)) {
+						soundsystem->playSound(buffaloDeathSound, 0, false, &channel);
+					}
+					lua_pop(L, 1);
 				}
-				soundsystem->playSound(buffaloDeathSound, 0, false, &channel);
 				// Check that indices are not outside vector range
 				// This can happen after a collision if game objects were removed
 				if (i >= gameObjects.size() || j >= gameObjects.size()){

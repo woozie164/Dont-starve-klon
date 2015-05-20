@@ -61,6 +61,13 @@ const GLfloat triangle[] = {
 GLuint VBOHandle[1];
 GLuint VAOHandle[1];
 
+void FMOD_ERR(FMOD_RESULT result) {
+	if (result != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
+	}
+}
+
 void InitTriangle()
 {
 	glGenBuffers(1, VBOHandle);
@@ -383,12 +390,23 @@ int main(int argc, char ** argv)
 	//world.SaveWorld("testworld.lua");
 	fresult = soundsystem->playSound(sound2, 0, false, &channel);
 	
-	channel->setVolume(0.8f);
+	FMOD::DSP * echoDSP;
+	fresult = soundsystem->createDSPByType(FMOD_DSP_TYPE_ECHO, &echoDSP);
+	if (fresult != FMOD_OK)
+	{
+		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+		exit(-1);
+	}
+	FMOD_ERR(echoDSP->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, 100.0f));
+
+	channel->setVolume(0.6f);
 	FirePit firePit;
 	world.AddDrawable((Drawable *)&firePit);
 	/* Loop until the user closes the window */
 	glm::vec3 characterPos(3.0f, 3.0f, 0.0f);
 
+
+	FMOD::Channel * walkChannel = nullptr;
 	while (!glfwWindowShouldClose(window))
 	{
 		// Calculate the sound volume of the fire effect
@@ -473,23 +491,36 @@ int main(int argc, char ** argv)
 
 			// Play some walking sound if you're moving
 			if (isMoving) {
-				FMOD::Sound *currentSound;
-				channel->getCurrentSound(&currentSound);
-
-				bool playSound = (currentSound != walkingSound1 && currentSound != walkingSound2);
-				if (playSound) {
-					static int selectSound = 0;
-					selectSound = ++selectSound % 2;
-					switch (selectSound)
+				// First time walking
+				if (walkChannel == nullptr) {
+					soundsystem->playSound(walkingSound1, 0, false, &walkChannel);
+					/*
+					fresult = walkChannel->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, echoDSP);
+					if (fresult != FMOD_OK)
 					{
-					case 0:
-						soundsystem->playSound(walkingSound1, 0, false, &channel);
-						break;
-					case 1:
-						soundsystem->playSound(walkingSound2, 0, false, &channel);
-						break;
-					default:
-						cerr << "Unkown option" << endl;
+						printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
+						exit(-1);
+					}
+					*/
+				} else { // All other times when walking.
+					FMOD::Sound *currentSound;
+					walkChannel->getCurrentSound(&currentSound);
+
+					bool playSound = (currentSound != walkingSound1 && currentSound != walkingSound2);
+					if (playSound) {
+						static int selectSound = 0;
+						selectSound = ++selectSound % 2;
+						switch (selectSound)
+						{
+						case 0:
+							soundsystem->playSound(walkingSound1, 0, false, &walkChannel);
+							break;
+						case 1:
+							soundsystem->playSound(walkingSound2, 0, false, &walkChannel);
+							break;
+						default:
+							cerr << "Unkown option" << endl;
+						}
 					}
 				}
 			}
@@ -614,6 +645,12 @@ int main(int argc, char ** argv)
 
 				result = soundsystem->playSound(sound3, 0, true, &channel2);
 				result = channel2->set3DAttributes(&pos, &vel);
+				int numdsps;
+				channel2->getNumDSPs(&numdsps);
+				if (numdsps == 1) {
+					channel2->addDSP(0, echoDSP);
+				}
+
 				result = channel2->setPaused(false);
 			}
 		}

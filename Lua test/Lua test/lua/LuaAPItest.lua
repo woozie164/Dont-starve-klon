@@ -17,12 +17,14 @@ function eat( eater, food )
 			print("nom nom")
 			GameObject_Delete(food.gobjptr)
 			entities[food.gobjptr] = nil
+			return food.gobjptr;
 		else
 			print("not an eater")
 		end
 	else 
 		print("not food")
 	end
+	return nil
 end
 
 function isfood( food ) 
@@ -79,7 +81,7 @@ function oncollision( self, other )
 	print(other)
 	print(entities[self])
 	print(entities[other])
-	eat(entities[self], entities[other])	
+	return eat(entities[self], entities[other])	
 end
 
 --oncollision( gobj2, gobj )
