@@ -28,6 +28,7 @@
 #include "FirePit.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "MyEcho.h"
 
 GameObject * mainCharacter;
 ShaderProgramManager spm;
@@ -390,6 +391,7 @@ int main(int argc, char ** argv)
 	//world.SaveWorld("testworld.lua");
 	fresult = soundsystem->playSound(sound2, 0, false, &channel);
 	
+	// Use FMOD's built in echo effect
 	FMOD::DSP * echoDSP;
 	fresult = soundsystem->createDSPByType(FMOD_DSP_TYPE_ECHO, &echoDSP);
 	if (fresult != FMOD_OK)
@@ -399,7 +401,21 @@ int main(int argc, char ** argv)
 	}
 	FMOD_ERR(echoDSP->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, 100.0f));
 
+	// Create a description of my own custom echo DSP
+	FMOD_DSP_DESCRIPTION myEchoDesc;
+	ZeroMemory(&myEchoDesc, sizeof(FMOD_DSP_DESCRIPTION));
+	myEchoDesc.pluginsdkversion = FMOD_PLUGIN_SDK_VERSION;
+	strcpy_s(myEchoDesc.name, "myEcho");
+	myEchoDesc.numinputbuffers = 1;
+	myEchoDesc.numoutputbuffers = 1;
+	myEchoDesc.create = MyEcho_Create_Callback;
+	myEchoDesc.read = MyEcho_Read_Callback;
+
+	FMOD::DSP * myEcho;
+	FMOD_ERR(soundsystem->createDSP(&myEchoDesc, &myEcho));
+
 	channel->setVolume(0.6f);
+	FMOD_ERR(channel->addDSP(0, myEcho));
 	FirePit firePit;
 	world.AddDrawable((Drawable *)&firePit);
 	/* Loop until the user closes the window */

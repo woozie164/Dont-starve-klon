@@ -89,6 +89,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="LuaAPI.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyEcho.cpp" />
     <ClCompile Include="shaders.cpp" />
     <ClCompile Include="terrain.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="lua.hpp" />
     <ClInclude Include="luaconf.h" />
     <ClInclude Include="lualib.h" />
+    <ClInclude Include="MyEcho.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="terrain.h" />
