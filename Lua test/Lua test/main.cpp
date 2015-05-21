@@ -416,6 +416,7 @@ int main(int argc, char ** argv)
 
 	channel->setVolume(0.6f);
 	FMOD_ERR(channel->addDSP(0, myEcho));
+
 	FirePit firePit;
 	world.AddDrawable((Drawable *)&firePit);
 	/* Loop until the user closes the window */
