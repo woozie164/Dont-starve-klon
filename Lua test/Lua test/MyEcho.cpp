@@ -28,16 +28,16 @@ FMOD_RESULT F_CALLBACK MyEcho_Read_Callback(FMOD_DSP_STATE *dsp_state, float *in
 	int i_delay = i - (sampleRate * duration);	
 	float maxAmp = 0.0f;
 	//i < length + i
-	for (int j = 0; j < length; i++, j++, i_delay++) {
+	for (int j = 0; j < length * 2; i++, j++, i_delay++) {
 		// Let the index wrap around, since this is a circular buffer
 		i %= buffer.size();
 		i_delay %= buffer.size();
-				
+
 		// Save the input samples to the delay buffer
 		buffer[i] = inbuffer[j];
 
 		// Calculate the output
-		outbuffer[j] = buffer[i] + buffer[i_delay] / 2.0f;
+		outbuffer[j] = buffer[i] + buffer[i_delay];
 		
 		if (abs(outbuffer[j]) > maxAmp) {
 			maxAmp = abs(outbuffer[j]);
@@ -53,11 +53,11 @@ FMOD_RESULT F_CALLBACK MyEcho_Read_Callback(FMOD_DSP_STATE *dsp_state, float *in
 	//float refValue = 1.0f;
 	/*
 	float refValue = maxAmp;
-	for (int j = 0; j < length; j++) {
+	for (int j = 0; j < length * 2; j++) {
 		//outbuffer[j] *= maxAmp / outbuffer[j];
 		//outbuffer[j] = outbuffer[j] / maxAmp * refValue;
 		outbuffer[j] = outbuffer[j] / maxAmp;
-	}
+	}	
 	*/
 	return FMOD_OK;
 }
