@@ -3,11 +3,13 @@
 #include <math.h>
 
 using namespace std;
-
+static vector<float> buffer;
 FMOD_RESULT F_CALLBACK LowPass_Create_Callback(FMOD_DSP_STATE * dsp_state)
 {
+	buffer.resize(5);
 	return FMOD_OK;
 }
+
 
 FMOD_RESULT F_CALLBACK LowPass_Read_Callback(FMOD_DSP_STATE *dsp_state, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int *outchannels)
 {
@@ -20,12 +22,22 @@ FMOD_RESULT F_CALLBACK LowPass_Read_Callback(FMOD_DSP_STATE *dsp_state, float *i
 	float b = sqrt(pow(2.0 - cos(2 * M_PI * f / SR), 2) - 1.0) - 2.0 + cos(2 * M_PI * f / SR);
 	float a = 1 + b;
 	static float lastSampleChannel0 = 0.0f, lastSampleChannel1 = 0.0f;
-	for (int i = 0; i < length * inchannels; i += 2) {
-		outbuffer[i] = a * inbuffer[i] - b * lastSampleChannel0;
-		lastSampleChannel0 = inbuffer[i];
 
-		outbuffer[i + 1] = a * inbuffer[i + 1] - b * lastSampleChannel1;
-		lastSampleChannel1 = inbuffer[i + 1];
+	unsigned int j = 0;
+
+	for (unsigned int i = 0; i < length * inchannels; i += 2) {
+		/*
+		j %= buffer.size();
+		outbuffer[i] = a * inbuffer[i] - b * buffer[j];
+		buffer[j] = 
+		*/
+		
+		outbuffer[i] = a * inbuffer[i] - b * lastSampleChannel0;		
+		lastSampleChannel0 = outbuffer[i];
+
+		outbuffer[i + 1] = a * inbuffer[i + 1] - b * lastSampleChannel1;		
+		lastSampleChannel1 = outbuffer[i + 1];
+		
 	}
 	return FMOD_OK;
 
