@@ -87,6 +87,7 @@
     <ClCompile Include="FirePit.cpp" />
     <ClCompile Include="Food.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="LowPass.cpp" />
     <ClCompile Include="LuaAPI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyEcho.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glfw3.h" />
     <ClInclude Include="glfw3native.h" />
+    <ClInclude Include="LowPass.h" />
     <ClInclude Include="lua.h" />
     <ClInclude Include="lua.hpp" />
     <ClInclude Include="luaconf.h" />

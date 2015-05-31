@@ -29,6 +29,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "MyEcho.h"
+#include "LowPass.h"
 
 GameObject * mainCharacter;
 ShaderProgramManager spm;
@@ -414,9 +415,24 @@ int main(int argc, char ** argv)
 	FMOD::DSP * myEcho;
 	FMOD_ERR(soundsystem->createDSP(&myEchoDesc, &myEcho));
 
-	channel->setVolume(0.6f);
+	channel->setVolume(0.5f);
 	FMOD_ERR(channel->addDSP(0, myEcho));
 	//channel->addDSP(0, echoDSP);
+
+	// Create a description of my custom LowPass filter
+	FMOD_DSP_DESCRIPTION lowPassDesc;
+	ZeroMemory(&lowPassDesc, sizeof(FMOD_DSP_DESCRIPTION));
+	myEchoDesc.pluginsdkversion = FMOD_PLUGIN_SDK_VERSION;
+	strcpy_s(myEchoDesc.name, "LowPass");
+	myEchoDesc.numinputbuffers = 1;
+	myEchoDesc.numoutputbuffers = 1;
+	myEchoDesc.create = LowPass_Create_Callback;
+	myEchoDesc.read = LowPass_Read_Callback;
+
+	FMOD::DSP * lowPass;
+	FMOD_ERR(soundsystem->createDSP(&lowPassDesc, &lowPass));
+	FMOD_ERR(fireChannel->addDSP(0, lowPass));
+	//FMOD_ERR(channel->addDSP(0, lowPass));
 
 	FirePit firePit;
 	world.AddDrawable((Drawable *)&firePit);
