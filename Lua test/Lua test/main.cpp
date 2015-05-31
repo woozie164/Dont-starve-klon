@@ -503,6 +503,15 @@ int main(int argc, char ** argv)
 
 		glUseProgram(planeProg);
 
+		if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+			FMOD::DSP * dsp;
+			fireChannel->getDSP(0, &dsp);
+			bool bypass;
+			dsp->getBypass(&bypass);
+			dsp->setBypass(!bypass);
+			cout << "DSP bypass is " << !bypass << endl;
+		}
+
 		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
 			camera.type = Camera::ISOMETRIC;
 		}
