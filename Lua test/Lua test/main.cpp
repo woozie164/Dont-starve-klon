@@ -422,17 +422,17 @@ int main(int argc, char ** argv)
 	// Create a description of my custom LowPass filter
 	FMOD_DSP_DESCRIPTION lowPassDesc;
 	ZeroMemory(&lowPassDesc, sizeof(FMOD_DSP_DESCRIPTION));
-	myEchoDesc.pluginsdkversion = FMOD_PLUGIN_SDK_VERSION;
-	strcpy_s(myEchoDesc.name, "LowPass");
-	myEchoDesc.numinputbuffers = 1;
-	myEchoDesc.numoutputbuffers = 1;
-	myEchoDesc.create = LowPass_Create_Callback;
-	myEchoDesc.read = LowPass_Read_Callback;
+	lowPassDesc.pluginsdkversion = FMOD_PLUGIN_SDK_VERSION;
+	strcpy_s(lowPassDesc.name, "LowPass");
+	lowPassDesc.numinputbuffers = 1;
+	lowPassDesc.numoutputbuffers = 1;
+	lowPassDesc.create = LowPass_Create_Callback;
+	lowPassDesc.read = LowPass_Read_Callback;
 
 	FMOD::DSP * lowPass;
 	FMOD_ERR(soundsystem->createDSP(&lowPassDesc, &lowPass));
 	FMOD_ERR(fireChannel->addDSP(0, lowPass));
-	//FMOD_ERR(channel->addDSP(0, lowPass));
+	//FMOD_ERR(channel->addDSP(1, lowPass));
 
 	FirePit firePit;
 	world.AddDrawable((Drawable *)&firePit);
