@@ -16,7 +16,7 @@ FMOD_RESULT F_CALLBACK LowPass_Read_Callback(FMOD_DSP_STATE *dsp_state, float *i
 	}	
 
 	float SR = 44100.0f;
-	float f = 200.0f;
+	float f = 5000.0f;
 	float b = sqrt(pow(2.0 - cos(2 * M_PI * f / SR), 2) - 1.0) - 2.0 + cos(2 * M_PI * f / SR);
 	float a = 1 + b;
 	static float lastSampleChannel0 = 0.0f, lastSampleChannel1 = 0.0f;

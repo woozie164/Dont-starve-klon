@@ -431,6 +431,7 @@ int main(int argc, char ** argv)
 
 	FMOD::DSP * lowPass;
 	FMOD_ERR(soundsystem->createDSP(&lowPassDesc, &lowPass));
+	//FMOD_ERR(soundsystem->createDSPByType(FMOD_DSP_TYPE_LOWPASS, &lowPass));
 	FMOD_ERR(fireChannel->addDSP(0, lowPass));
 	//FMOD_ERR(channel->addDSP(1, lowPass));
 
