@@ -63,6 +63,19 @@ const GLfloat triangle[] = {
 GLuint VBOHandle[1];
 GLuint VAOHandle[1];
 
+FMOD::Channel *fireChannel;
+void glfwKeyCallback(GLFWwindow * window, int key, int scancode, int action, int mods)
+{
+	if (action == GLFW_PRESS && key == GLFW_KEY_M) {			
+		FMOD::DSP * dsp;
+		fireChannel->getDSP(0, &dsp);
+		bool bypass;
+		dsp->getBypass(&bypass);
+		dsp->setBypass(!bypass);
+		cout << "DSP bypass is " << !bypass << endl;		
+	}
+}
+
 void FMOD_ERR(FMOD_RESULT result) {
 	if (result != FMOD_OK)
 	{
@@ -147,6 +160,7 @@ GLFWwindow* window;
 FMOD::System *soundsystem = nullptr;
 FMOD::Sound *buffaloDeathSound;
 FMOD::Channel    *channel = 0;
+
 int main(int argc, char ** argv)
 {
 	/*
@@ -273,7 +287,7 @@ int main(int argc, char ** argv)
 		printf("FMOD error! (%d) %s\n", fresult, FMOD_ErrorString(fresult));
 		exit(-1);
 	}
-	FMOD::Channel *fireChannel;
+	
 	soundsystem->playSound(fireSound, 0, false, &fireChannel);
 
 	/* Initialize the library */
@@ -281,18 +295,18 @@ int main(int argc, char ** argv)
 		return -1;
 	
 	glfwSetErrorCallback(glfw_error_callback);
-
+	
 	//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 	//window = glfwCreateWindow(1920, 1080, "Borderless fullscreen ftw", NULL, NULL);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-	
+	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);	
+
 	if (!window)
 	{
 		glfwTerminate();
 		return -1;
 	}
-
+	glfwSetKeyCallback(window, glfwKeyCallback);
 	glfwMakeContextCurrent(window);
 	
 	GLenum err = glewInit();
@@ -502,15 +516,6 @@ int main(int argc, char ** argv)
 		float deltaTime = float(currentTime - lastTime);
 
 		glUseProgram(planeProg);
-
-		if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-			FMOD::DSP * dsp;
-			fireChannel->getDSP(0, &dsp);
-			bool bypass;
-			dsp->getBypass(&bypass);
-			dsp->setBypass(!bypass);
-			cout << "DSP bypass is " << !bypass << endl;
-		}
 
 		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
 			camera.type = Camera::ISOMETRIC;
